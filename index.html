@@ -141,9 +141,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 @keyframes spin { to { transform:rotate(360deg); } }
 .sync-dot { width:8px; height:8px; border-radius:50%; background:var(--green-mid); display:inline-block; margin-right:5px; animation:pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
-.toast { position:fixed; bottom:1.5rem; right:1.5rem; background:var(--surface); border:0.5px solid var(--border-hover); border-radius:var(--radius-lg); padding:10px 18px; font-size:13px; font-weight:600; color:var(--text); z-index:999; opacity:0; transform:translateY(8px); transition:all 0.2s; pointer-events:none; box-shadow:0 4px 16px rgba(0,0,0,0.12); }
+.toast { position:fixed; bottom:1.5rem; right:1.5rem; background:var(--surface); border:0.5px solid var(--border-hover); border-radius:var(--radius-lg); padding:10px 18px; font-size:13px; font-weight:600; color:var(--text); z-index:999; opacity:0; transform:translateY(8px); transition:all 0.2s; pointer-events:none; }
 .toast.show { opacity:1; transform:translateY(0); }
-.lock-screen { text-align:center; padding:4rem 1rem; }
 @media (max-width:600px) {
   .stats-row { grid-template-columns:repeat(2,1fr); }
   .settings-grid { grid-template-columns:1fr; }
@@ -154,7 +153,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </head>
 <body>
 <div class="app">
-
   <div class="header">
     <div class="logo-wrap">
       <div class="logo-mark">🤲</div>
@@ -190,7 +188,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   </div>
 
   <div class="page" id="page-admin">
-    <div id="admin-lock" class="lock-screen">
+    <div id="admin-lock" style="text-align:center;padding:4rem 1rem;">
       <div style="font-size:40px;margin-bottom:16px;">🔐</div>
       <div style="font-size:16px;font-weight:600;margin-bottom:8px;color:var(--text);">Admin access</div>
       <div style="font-size:13px;color:var(--text-2);margin-bottom:1.5rem;line-height:1.6;">Enter the admin password to manage inventory,<br>pickup settings, and pickup requests.</div>
@@ -239,7 +237,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 </div>
 
-<!-- CHECKOUT MODAL -->
 <div class="modal-overlay" id="co-modal">
   <div class="modal">
     <div class="modal-title">Schedule your pickup</div>
@@ -254,7 +251,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   </div>
 </div>
 
-<!-- ADD ITEM MODAL -->
 <div class="modal-overlay" id="add-item-modal">
   <div class="modal">
     <div class="modal-title">Add new item</div>
@@ -275,7 +271,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   </div>
 </div>
 
-<!-- ADD STOCK MODAL -->
 <div class="modal-overlay" id="add-stock-modal">
   <div class="modal">
     <div class="modal-title" id="as-title">Add stock</div>
@@ -287,11 +282,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   </div>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal">
     <div class="modal-title">Pickup settings</div>
-    <div class="fg"><label class="fl">Location / address</label><textarea class="fi" id="s-location" rows="2" placeholder="Church Hall — Room 102&#10;123 Faith Street"></textarea></div>
+    <div class="fg"><label class="fl">Location / address</label><textarea class="fi" id="s-location" rows="2" placeholder="Church Hall — Room 102"></textarea></div>
     <div class="fg"><label class="fl">Available days (comma-separated)</label><input class="fi" id="s-days" placeholder="Monday, Wednesday, Friday"></div>
     <div class="fg"><label class="fl">Pickup hours</label><input class="fi" id="s-hours" placeholder="10:00 AM – 2:00 PM"></div>
     <div class="modal-actions">
@@ -302,7 +296,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </div>
 
 <div class="toast" id="toast"></div>
-
 <script>
 const SUPABASE_URL = "https://cvfgtijbbotpmkjggebv.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2Zmd0aWpiYm90cG1ramdnZWJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDg1OTgsImV4cCI6MjA5MTAyNDU5OH0.0MUWJs5Bh9C021U1p1BAbrAROEpzU2lYxHoSmsEeNYc";
@@ -313,11 +306,11 @@ let inventory=[], orders=[], settings={location:'Church Hall — Room 102',days:
 let cart={}, activeCat="All", addStockTargetId=null, adminUnlocked=false;
 
 async function db(path, method='GET', body=null) {
-  const headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
-  const opts = { method, headers };
-  if (body) opts.body = JSON.stringify(body);
+  const headers = {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
+  const opts = {method, headers};
+  if(body) opts.body = JSON.stringify(body);
   const res = await fetch(SUPABASE_URL+'/rest/v1/'+path, opts);
-  if (!res.ok) throw new Error(await res.text());
+  if(!res.ok) throw new Error(await res.text());
   const text = await res.text();
   return text ? JSON.parse(text) : [];
 }
@@ -331,13 +324,13 @@ async function init() {
     ]);
     inventory = inv;
     orders = ord;
-    if (sett.length) settings = { location:sett[0].location, days:sett[0].days, hours:sett[0].hours };
+    if(sett.length) settings = {location:sett[0].location, days:sett[0].days, hours:sett[0].hours};
     document.getElementById('shop-loading').style.display='none';
     document.getElementById('items-grid').style.display='grid';
     populatePickupSelects(); updateBanner(); renderShop(); renderCart();
     startPolling();
   } catch(e) {
-    document.getElementById('shop-loading').innerHTML='<div style="color:var(--coral);font-size:13px;">Could not connect to database.<br><small>'+escHtml(e.message)+'</small><br><br><button onclick="init()" style="margin-top:8px;padding:6px 14px;border-radius:6px;border:1px solid var(--border-hover);background:transparent;cursor:pointer;font-size:12px;color:var(--text-2);">Retry</button></div>';
+    document.getElementById('shop-loading').innerHTML='<div style="color:var(--coral);font-size:13px;">Could not connect to database.<br><small>'+escHtml(e.message)+'</small><br><br><button onclick="init()" style="margin-top:8px;padding:6px 14px;border-radius:6px;border:1px solid #ccc;background:transparent;cursor:pointer;font-size:12px;">Retry</button></div>';
   }
 }
 
@@ -345,15 +338,14 @@ function startPolling() {
   setInterval(async () => {
     try {
       const inv = await db('inventory?order=id');
-      if (JSON.stringify(inv) !== JSON.stringify(inventory)) {
-        inventory = inv;
-        renderShop();
-        if (adminUnlocked) renderAdmin();
+      if(JSON.stringify(inv) !== JSON.stringify(inventory)) {
+        inventory = inv; renderShop();
+        if(adminUnlocked) renderAdmin();
       }
       const ord = await db('orders?order=id');
-      if (JSON.stringify(ord) !== JSON.stringify(orders)) {
+      if(JSON.stringify(ord) !== JSON.stringify(orders)) {
         orders = ord;
-        if (adminUnlocked) renderAdmin();
+        if(adminUnlocked) renderAdmin();
       }
     } catch(e) {}
   }, 15000);
@@ -361,17 +353,20 @@ function startPolling() {
 
 function generateSlots(h) {
   const m=h.match(/(\d+):?(\d*)\s*(AM|PM)\s*[–\-]\s*(\d+):?(\d*)\s*(AM|PM)/i);
-  if(!m)return[h];
+  if(!m) return [h];
   let sh=parseInt(m[1]),sm=parseInt(m[2]||0),sap=m[3].toUpperCase();
   let eh=parseInt(m[4]),em=parseInt(m[5]||0),eap=m[6].toUpperCase();
   let s=(sap==='PM'&&sh!==12?sh+12:sap==='AM'&&sh===12?0:sh)*60+sm;
   let e2=(eap==='PM'&&eh!==12?eh+12:eap==='AM'&&eh===12?0:eh)*60+em;
   const slots=[];
-  for(let t=s;t+60<=e2;t+=60)slots.push(ft(t)+' – '+ft(t+60));
-  return slots.length?slots:[h];
+  for(let t=s;t+60<=e2;t+=60) slots.push(ft(t)+' – '+ft(t+60));
+  return slots.length ? slots : [h];
 }
-function ft(m){let h=Math.floor(m/60),mn=m%60,ap=h<12?'AM':'PM';if(h===0)h=12;else if(h>12)h-=12;return h+':'+(mn<10?'0':'')+mn+' '+ap;}
-
+function ft(m) {
+  let h=Math.floor(m/60),mn=m%60,ap=h<12?'AM':'PM';
+  if(h===0) h=12; else if(h>12) h-=12;
+  return h+':'+(mn<10?'0':'')+mn+' '+ap;
+}
 function populatePickupSelects() {
   const d=document.getElementById('co-day');
   d.innerHTML='<option value="">Choose a day...</option>';
@@ -391,7 +386,7 @@ function showPage(p) {
   document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('tab-'+p).classList.add('active');
-  if(p==='admin'&&adminUnlocked)renderAdmin();
+  if(p==='admin'&&adminUnlocked) renderAdmin();
 }
 
 function renderShop() {
@@ -400,12 +395,12 @@ function renderShop() {
   document.getElementById('items-grid').innerHTML=items.map(item=>{
     const qty=cart[item.id]||0,out=item.stock<=0,low=item.stock>0&&item.stock<=3;
     return `<div class="item-card ${out?'oos':''}">
-      ${qty>0?`<span class="in-cart-tag">×${qty}</span>`:''}
+      ${qty>0?`<span class="in-cart-tag">x${qty}</span>`:''}
       <span class="item-icon">${item.icon}</span>
       <div class="item-name">${escHtml(item.name)}</div>
       <div class="item-cat">${escHtml(item.cat)}</div>
-      <div class="item-stock ${out?'out':low?'low':''}">${out?'Out of stock':low?`Only ${item.stock} left`:`${item.stock} available`}</div>
-      ${!out?`<button class="add-btn" onclick="addToCart(${item.id},event)">+</button>`:''}
+      <div class="item-stock ${out?'out':low?'low':''}">${out?'Out of stock':low?'Only '+item.stock+' left':item.stock+' available'}</div>
+      ${!out?'<button class="add-btn" onclick="addToCart('+item.id+',event)">+</button>':''}
     </div>`;
   }).join('');
 }
@@ -430,16 +425,7 @@ function renderCart() {
   if(!keys.length){document.getElementById('cart-body').innerHTML='<div class="empty-msg">No items selected yet.<br><span style="font-size:12px;color:var(--text-3);">Head to the shop — everything is free!</span></div>';return;}
   document.getElementById('cart-body').innerHTML=keys.map(k=>{
     const item=inventory.find(i=>i.id==k);if(!item)return'';
-    return `<div class="cart-row">
-      <span class="ci-icon">${item.icon}</span>
-      <div class="ci-info"><div class="ci-name">${escHtml(item.name)}</div><div class="ci-cat">${escHtml(item.cat)}</div></div>
-      <div class="qty-ctrl">
-        <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
-        <span class="qty-n">${cart[k]}</span>
-        <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
-      </div>
-      <button class="rm-btn" onclick="rmItem(${item.id})">✕</button>
-    </div>`;
+    return '<div class="cart-row"><span class="ci-icon">'+item.icon+'</span><div class="ci-info"><div class="ci-name">'+escHtml(item.name)+'</div><div class="ci-cat">'+escHtml(item.cat)+'</div></div><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty('+item.id+',-1)">-</button><span class="qty-n">'+cart[k]+'</span><button class="qty-btn" onclick="changeQty('+item.id+',1)">+</button></div><button class="rm-btn" onclick="rmItem('+item.id+')">x</button></div>';
   }).join('');
 }
 function changeQty(id,d){const item=inventory.find(i=>i.id===id),nv=(cart[id]||0)+d;if(nv>item.stock){toast('No more available!');return;}if(nv<=0)delete cart[id];else cart[id]=nv;updateCartDot();renderCart();}
@@ -457,12 +443,12 @@ async function submitCheckout() {
   const keys=Object.keys(cart).filter(k=>cart[k]>0);
   const items=keys.map(k=>{const item=inventory.find(i=>i.id==k);return{id:parseInt(k),qty:cart[k],name:item.name,icon:item.icon};});
   try {
-    for(const k of keys){const item=inventory.find(i=>i.id==k);await db(`inventory?id=eq.${item.id}`,'PATCH',{stock:item.stock-cart[k]});}
+    for(const k of keys){const item=inventory.find(i=>i.id==k);await db('inventory?id=eq.'+item.id,'PATCH',{stock:item.stock-cart[k]});}
     await db('orders','POST',{id:Date.now(),name,contact:document.getElementById('co-contact').value,day,time_slot:time,items,status:'pending',ts:new Date().toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})});
     closeModal('co-modal');
     const ll=(settings.location||'').split('\n');
-    document.getElementById('conf-area').innerHTML=`<div class="conf-box"><span class="conf-icon">✅</span><div class="conf-title">You're all set, ${escHtml(name)}!</div><div class="conf-sub">Your items will be held. No payment needed — everything is free.</div><div class="conf-pickup">📍 ${ll.map(escHtml).join('<br>')}<br>📅 ${escHtml(day)} · ${escHtml(time)}</div><div class="conf-note">Please show this confirmation when you arrive.</div></div>`;
-    document.getElementById('cart-body').innerHTML='<div class="empty-msg">Pickup confirmed! ✓</div>';
+    document.getElementById('conf-area').innerHTML='<div class="conf-box"><span class="conf-icon">✅</span><div class="conf-title">You are all set, '+escHtml(name)+'!</div><div class="conf-sub">Your items will be held. No payment needed — everything is free.</div><div class="conf-pickup">📍 '+ll.map(escHtml).join('<br>')+'<br>📅 '+escHtml(day)+' · '+escHtml(time)+'</div><div class="conf-note">Please show this confirmation when you arrive.</div></div>';
+    document.getElementById('cart-body').innerHTML='<div class="empty-msg">Pickup confirmed!</div>';
     document.getElementById('co-btn').disabled=true;
     cart={}; updateCartDot(); toast('Pickup scheduled!');
     inventory=await db('inventory?order=id'); renderShop();
@@ -475,7 +461,7 @@ function checkPw(){
     document.getElementById('admin-lock').style.display='none';
     document.getElementById('admin-panel').style.display='block';
     renderAdmin();
-  }else{document.getElementById('pw-err').style.display='block';}
+  } else {document.getElementById('pw-err').style.display='block';}
 }
 
 function renderAdmin(){
@@ -483,40 +469,36 @@ function renderAdmin(){
   const low=inventory.filter(i=>i.stock>0&&i.stock<=3).length;
   const out=inventory.filter(i=>i.stock<=0).length;
   const pending=orders.filter(o=>o.status!=='done').length;
-  document.getElementById('admin-stats').innerHTML=`
-    <div class="stat-card"><div class="stat-label">Item types</div><div class="stat-val">${inventory.length}</div></div>
-    <div class="stat-card"><div class="stat-label">Total units</div><div class="stat-val">${total}</div></div>
-    <div class="stat-card"><div class="stat-label">Low / out</div><div class="stat-val" style="color:var(--amber)">${low+out}</div></div>
-    <div class="stat-card"><div class="stat-label">Open orders</div><div class="stat-val" style="color:var(--teal)">${pending}</div></div>`;
+  document.getElementById('admin-stats').innerHTML='<div class="stat-card"><div class="stat-label">Item types</div><div class="stat-val">'+inventory.length+'</div></div><div class="stat-card"><div class="stat-label">Total units</div><div class="stat-val">'+total+'</div></div><div class="stat-card"><div class="stat-label">Low / out</div><div class="stat-val" style="color:var(--amber)">'+(low+out)+'</div></div><div class="stat-card"><div class="stat-label">Open orders</div><div class="stat-val" style="color:var(--teal)">'+pending+'</div></div>';
   document.getElementById('disp-location').innerHTML=(settings.location||'').split('\n').map(escHtml).join('<br>');
   document.getElementById('disp-days').textContent=(settings.days||[]).join(', ');
   document.getElementById('disp-hours').textContent=settings.hours||'';
   document.getElementById('inv-body').innerHTML=[...inventory].sort((a,b)=>a.stock-b.stock).map(item=>{
     const cls=item.stock<=0?'s-out':item.stock<=3?'s-low':'s-ok';
     const lbl=item.stock<=0?'Out':item.stock<=3?'Low':'OK';
-    return `<tr><td>${item.icon} ${escHtml(item.name)}</td><td style="color:var(--text-2)">${escHtml(item.cat)}</td><td style="font-weight:700">${item.stock}</td><td><span class="sbadge ${cls}">${lbl}</span></td><td><button class="as-btn" onclick="openAddStock(${item.id})">+ Add</button></td></tr>`;
+    return '<tr><td>'+item.icon+' '+escHtml(item.name)+'</td><td style="color:var(--text-2)">'+escHtml(item.cat)+'</td><td style="font-weight:700">'+item.stock+'</td><td><span class="sbadge '+cls+'">'+lbl+'</span></td><td><button class="as-btn" onclick="openAddStock('+item.id+')">+ Add</button></td></tr>';
   }).join('');
   const ol=document.getElementById('orders-list');
   if(!orders.length){ol.innerHTML='<div style="color:var(--text-2);font-size:13px;padding:1rem 0;">No pickup requests yet.</div>';return;}
   ol.innerHTML=[...orders].reverse().map(o=>{
-    const ilist=o.items.map(i=>`${i.icon} ${escHtml(i.name)} ×${i.qty}`).join(', ');
+    const ilist=o.items.map(i=>i.icon+' '+escHtml(i.name)+' x'+i.qty).join(', ');
     const sc=o.status==='done'?'st-done':o.status==='ready'?'st-ready':'st-pending';
     const sl=o.status==='done'?'Picked up':o.status==='ready'?'Ready for pickup':'Pending';
-    return `<div class="order-card"><div class="order-hdr"><span class="order-name">${escHtml(o.name)}</span><span class="order-meta">${escHtml(o.day)} · ${escHtml(o.time_slot||'')} · ${escHtml(o.ts||'')}</span></div>${o.contact?`<div class="order-contact">📞 ${escHtml(o.contact)}</div>`:''}<div class="order-items">${ilist}</div><span class="ostatus ${sc}">${sl}</span>${o.status!=='done'?`<button class="adv-btn" onclick="advOrder(${o.id})">${o.status==='pending'?'Mark ready':'Mark picked up'}</button>`:''}</div>`;
+    return '<div class="order-card"><div class="order-hdr"><span class="order-name">'+escHtml(o.name)+'</span><span class="order-meta">'+escHtml(o.day)+' · '+escHtml(o.time_slot||'')+' · '+escHtml(o.ts||'')+'</span></div>'+(o.contact?'<div class="order-contact">📞 '+escHtml(o.contact)+'</div>':'')+'<div class="order-items">'+ilist+'</div><span class="ostatus '+sc+'">'+sl+'</span>'+(o.status!=='done'?'<button class="adv-btn" onclick="advOrder('+o.id+')">'+(o.status==='pending'?'Mark ready':'Mark picked up')+'</button>':'')+'</div>';
   }).join('');
 }
 
 async function advOrder(id){
   const o=orders.find(x=>x.id===id);
   const s=o.status==='pending'?'ready':'done';
-  try{await db(`orders?id=eq.${id}`,'PATCH',{status:s});o.status=s;renderAdmin();}catch(e){toast('Error: '+e.message);}
+  try{await db('orders?id=eq.'+id,'PATCH',{status:s});o.status=s;renderAdmin();}catch(e){toast('Error: '+e.message);}
 }
 function openAddStock(id){addStockTargetId=id;const item=inventory.find(i=>i.id===id);document.getElementById('as-title').textContent='Add stock: '+item.name;document.getElementById('as-qty').value=5;openModal('add-stock-modal');}
 async function submitAddStock(){
   const qty=parseInt(document.getElementById('as-qty').value)||0;
   if(qty<=0){toast('Enter a valid quantity');return;}
   const item=inventory.find(i=>i.id===addStockTargetId);
-  try{await db(`inventory?id=eq.${item.id}`,'PATCH',{stock:item.stock+qty});item.stock+=qty;closeModal('add-stock-modal');renderAdmin();renderShop();toast('Added '+qty+' × '+item.name);}catch(e){toast('Error: '+e.message);}
+  try{await db('inventory?id=eq.'+item.id,'PATCH',{stock:item.stock+qty});item.stock+=qty;closeModal('add-stock-modal');renderAdmin();renderShop();toast('Added '+qty+' x '+item.name);}catch(e){toast('Error: '+e.message);}
 }
 async function submitAddItem(){
   const name=document.getElementById('ni-name').value.trim();
