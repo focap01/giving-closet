@@ -1,7 +1,658 @@
 <!DOCTYPE html>
-<html>
-<head><title>Giving Closet</title></head>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giving Closet</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f7f4;color:#1a1a18;min-height:100vh;}
+:root{
+--green:#3B6D11;--green-light:#EAF3DE;--green-mid:#639922;--green-border:#C0DD97;
+--teal:#0F6E56;--teal-light:#E1F5EE;--teal-mid:#1D9E75;--teal-border:#5DCAA5;
+--amber:#BA7517;--amber-light:#FAEEDA;
+--coral:#993C1D;--coral-light:#FAECE7;
+--gray-mid:#888780;
+--border:rgba(0,0,0,0.12);--border-hover:rgba(0,0,0,0.25);
+--surface:#ffffff;--surface-2:#f1efe8;
+--text:#1a1a18;--text-2:#5f5e5a;--text-3:#888780;
+--radius:8px;--radius-lg:12px;
+}
+.app{max-width:900px;margin:0 auto;padding:0 1rem 3rem;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0;border-bottom:0.5px solid var(--border);margin-bottom:1.5rem;flex-wrap:wrap;gap:12px;}
+.logo-wrap{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:38px;height:38px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:20px;border:0.5px solid var(--green-border);}
+.app-title{font-size:18px;font-weight:600;color:var(--text);}
+.app-sub{font-size:12px;color:var(--text-2);}
+.nav-tabs{display:flex;gap:6px;}
+.tab-btn{padding:7px 16px;border-radius:var(--radius);border:0.5px solid var(--border-hover);background:transparent;font-size:13px;cursor:pointer;color:var(--text-2);transition:all 0.15s;position:relative;font-family:inherit;}
+.tab-btn.active{background:var(--green-light);color:var(--green);border-color:var(--green-border);font-weight:600;}
+.tab-btn:hover:not(.active){background:var(--surface-2);color:var(--text);}
+.cart-dot{position:absolute;top:-4px;right:-4px;background:var(--green-mid);color:white;border-radius:50%;width:17px;height:17px;font-size:10px;display:none;align-items:center;justify-content:center;font-weight:700;}
+.page{display:none;}
+.page.active{display:block;}
+.pickup-banner{background:var(--teal-light);border:0.5px solid var(--teal-border);border-radius:var(--radius-lg);padding:10px 16px;margin-bottom:1.25rem;font-size:13px;color:var(--teal);font-weight:500;}
+.cat-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;}
+.cat-pill{padding:5px 13px;border-radius:999px;border:0.5px solid var(--border-hover);font-size:12px;cursor:pointer;color:var(--text-2);background:transparent;transition:all 0.15s;white-space:nowrap;font-family:inherit;}
+.cat-pill.active{background:var(--teal-light);color:var(--teal);border-color:var(--teal-border);font-weight:600;}
+.cat-pill:hover:not(.active){background:var(--surface-2);color:var(--text);}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.item-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:border-color 0.15s;position:relative;}
+.item-card:hover:not(.oos){border-color:var(--border-hover);}
+.item-card.oos{opacity:0.5;}
+.item-icon{font-size:28px;margin-bottom:8px;display:block;}
+.item-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.item-cat{font-size:11px;color:var(--text-3);margin-bottom:8px;}
+.item-stock{font-size:11px;color:var(--text-3);}
+.item-stock.low{color:var(--amber);font-weight:600;}
+.item-stock.out{color:var(--coral);font-weight:600;}
+.add-btn{position:absolute;bottom:10px;right:10px;width:28px;height:28px;border-radius:50%;background:var(--green-light);border:0.5px solid var(--green-border);color:var(--green);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;font-weight:600;}
+.add-btn:hover{background:var(--green-border);}
+.in-cart-tag{position:absolute;top:8px;right:8px;background:var(--green-mid);color:white;border-radius:999px;font-size:10px;padding:2px 7px;font-weight:700;}
+.cart-panel{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem;}
+.cart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.cart-title{font-size:15px;font-weight:600;color:var(--text);}
+.clear-btn{padding:5px 12px;border-radius:var(--radius);border:0.5px solid var(--border-hover);background:transparent;font-size:12px;cursor:pointer;color:var(--text-2);font-family:inherit;}
+.empty-msg{text-align:center;padding:2.5rem 1rem;color:var(--text-2);font-size:14px;line-height:1.6;}
+.cart-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);}
+.cart-row:last-of-type{border-bottom:none;}
+.ci-icon{font-size:22px;width:30px;text-align:center;}
+.ci-info{flex:1;min-width:0;}
+.ci-name{font-size:13px;font-weight:600;color:var(--text);}
+.ci-cat{font-size:11px;color:var(--text-3);}
+.qty-ctrl{display:flex;align-items:center;gap:6px;}
+.qty-btn{width:24px;height:24px;border-radius:5px;border:0.5px solid var(--border-hover);background:transparent;cursor:pointer;font-size:15px;color:var(--text);display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.qty-btn:hover{background:var(--surface-2);}
+.qty-n{font-size:13px;font-weight:600;min-width:22px;text-align:center;color:var(--text);}
+.rm-btn{background:none;border:none;cursor:pointer;color:var(--text-3);font-size:15px;padding:3px 5px;border-radius:5px;}
+.rm-btn:hover{color:var(--coral);background:var(--coral-light);}
+.checkout-btn{width:100%;padding:11px;background:var(--green-mid);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;margin-top:1rem;transition:background 0.15s;font-family:inherit;}
+.checkout-btn:hover{background:var(--green);}
+.checkout-btn:disabled{background:var(--gray-mid);cursor:not-allowed;}
+.conf-box{background:var(--teal-light);border:0.5px solid var(--teal-border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;}
+.conf-icon{font-size:36px;display:block;margin-bottom:10px;}
+.conf-title{font-size:17px;font-weight:600;color:var(--teal);margin-bottom:6px;}
+.conf-sub{font-size:13px;color:var(--text-2);line-height:1.6;}
+.conf-pickup{font-size:14px;font-weight:600;color:var(--teal);margin-top:12px;padding:12px 14px;background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--teal-border);line-height:2;}
+.conf-note{margin-top:10px;font-size:12px;color:var(--text-3);}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:440px;border:0.5px solid var(--border);max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:1.25rem;color:var(--text);}
+.fg{margin-bottom:1rem;}
+.fl{font-size:12px;color:var(--text-2);display:block;margin-bottom:5px;font-weight:500;}
+.fi{width:100%;padding:9px 11px;border:0.5px solid var(--border-hover);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:inherit;}
+.fi:focus{outline:none;border-color:var(--teal-mid);}
+.modal-actions{display:flex;gap:8px;margin-top:1.25rem;}
+.btn-sec{flex:1;padding:10px;border:0.5px solid var(--border-hover);background:transparent;border-radius:var(--radius);font-size:13px;cursor:pointer;color:var(--text-2);font-family:inherit;}
+.btn-pri{flex:2;padding:10px;background:var(--green-mid);color:white;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-pri:hover{background:var(--green);}
+.stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.75rem;}
+.stat-card{background:var(--surface-2);border-radius:var(--radius);padding:14px;}
+.stat-label{font-size:11px;color:var(--text-3);margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:0.03em;}
+.stat-val{font-size:24px;font-weight:700;color:var(--text);}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:8px;border-bottom:0.5px solid var(--border);}
+.sec-title{font-size:15px;font-weight:600;color:var(--text);}
+.add-item-btn{padding:7px 14px;border-radius:var(--radius);background:var(--green-mid);color:white;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.inv-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.inv-table th{text-align:left;padding:9px 10px;font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;border-bottom:0.5px solid var(--border);}
+.inv-table td{padding:11px 10px;border-bottom:0.5px solid var(--border);vertical-align:middle;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.inv-table tr:last-child td{border-bottom:none;}
+.sbadge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;}
+.s-ok{background:var(--green-light);color:var(--green);}
+.s-low{background:var(--amber-light);color:var(--amber);}
+.s-out{background:var(--coral-light);color:var(--coral);}
+.as-btn{padding:4px 11px;border-radius:var(--radius);border:0.5px solid var(--green-border);background:var(--green-light);color:var(--green);font-size:12px;cursor:pointer;font-weight:600;font-family:inherit;}
+.orders-list{display:flex;flex-direction:column;gap:10px;}
+.order-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;}
+.ostatus{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;font-weight:600;}
+.st-pending{background:var(--amber-light);color:var(--amber);}
+.st-ready{background:var(--teal-light);color:var(--teal);}
+.st-done{background:var(--green-light);color:var(--green);}
+.adv-btn{padding:4px 11px;border-radius:var(--radius);border:0.5px solid var(--teal-border);background:var(--teal-light);color:var(--teal);font-size:12px;cursor:pointer;margin-left:8px;font-weight:600;font-family:inherit;}
+.settings-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:2rem;}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.settings-label{font-size:11px;color:var(--text-3);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;}
+.settings-val{font-size:14px;font-weight:600;color:var(--text);line-height:1.6;}
+.edit-btn{padding:5px 12px;border-radius:var(--radius);border:0.5px solid var(--teal-border);background:transparent;color:var(--teal);font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;margin-top:8px;display:inline-block;}
+.loading-bar{text-align:center;padding:3rem 1rem;color:var(--text-2);font-size:14px;}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--green-mid);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:0.5px solid var(--border-hover);border-radius:var(--radius-lg);padding:10px 18px;font-size:13px;font-weight:600;color:var(--text);z-index:999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+@media(max-width:600px){
+.stats-row{grid-template-columns:repeat(2,1fr);}
+.settings-grid{grid-template-columns:1fr;}
+.items-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+.header{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
 <body>
-<button onclick="alert('JavaScript works!')">Test</button>
+<div class="app">
+<div class="header">
+<div class="logo-wrap">
+<div class="logo-mark">🤲</div>
+<div>
+<div class="app-title">Giving Closet</div>
+<div class="app-sub">Live shared inventory</div>
+</div>
+</div>
+<div class="nav-tabs">
+<button class="tab-btn active" id="tab-shop" onclick="showPage('shop')">Shop</button>
+<button class="tab-btn" id="tab-cart" onclick="showPage('cart')">Cart<span class="cart-dot" id="cart-dot">0</span></button>
+<button class="tab-btn" id="tab-admin" onclick="showPage('admin')">Admin</button>
+</div>
+</div>
+
+<div class="page active" id="page-shop">
+<div class="pickup-banner" id="pickup-banner"></div>
+<div class="cat-bar" id="cat-bar"></div>
+<div id="shop-loading" class="loading-bar"><div class="spinner"></div><br>Loading inventory...</div>
+<div class="items-grid" id="items-grid" style="display:none;"></div>
+</div>
+
+<div class="page" id="page-cart">
+<div class="cart-panel">
+<div class="cart-hdr">
+<span class="cart-title">Your selections</span>
+<button class="clear-btn" onclick="clearCart()">Clear all</button>
+</div>
+<div id="cart-body"></div>
+<button class="checkout-btn" id="co-btn" onclick="openModal('co-modal')" disabled>Request pickup</button>
+</div>
+<div id="conf-area"></div>
+</div>
+
+<div class="page" id="page-admin">
+<div id="admin-lock" style="text-align:center;padding:4rem 1rem;">
+<div style="font-size:40px;margin-bottom:16px;">🔐</div>
+<div style="font-size:16px;font-weight:600;margin-bottom:8px;color:var(--text);">Admin access</div>
+<div style="font-size:13px;color:var(--text-2);margin-bottom:1.5rem;">Enter the admin password to manage inventory and settings.</div>
+<input type="password" class="fi" id="pw-input" placeholder="Password" style="max-width:260px;margin:0 auto 12px;display:block;" onkeydown="if(event.key==='Enter')checkPw()">
+<button class="btn-pri" style="max-width:140px;display:block;margin:0 auto;" onclick="checkPw()">Enter</button>
+<div id="pw-err" style="color:var(--coral);font-size:12px;margin-top:8px;display:none;">Incorrect password.</div>
+</div>
+<div id="admin-panel" style="display:none;">
+<div class="stats-row" id="admin-stats"></div>
+<div class="sec-hdr" style="margin-bottom:0.75rem;"><span class="sec-title">Pickup settings</span></div>
+<div class="settings-card">
+<div class="settings-grid">
+<div>
+<div class="settings-label">Location</div>
+<div class="settings-val" id="disp-location"></div>
+</div>
+<div>
+<div class="settings-label">Pickup days</div>
+<div class="settings-val" id="disp-days"></div>
+<div class="settings-label" style="margin-top:10px;">Hours</div>
+<div class="settings-val" id="disp-hours"></div>
+</div>
+</div>
+<button class="edit-btn" onclick="openSettingsModal()">Edit pickup settings</button>
+</div>
+<div style="margin-bottom:2rem;">
+<div class="sec-hdr">
+<span class="sec-title">Inventory</span>
+<button class="add-item-btn" onclick="openModal('add-item-modal')">+ Add new item</button>
+</div>
+<div style="overflow-x:auto;">
+<table class="inv-table">
+<thead><tr><th style="width:36%">Item</th><th style="width:24%">Category</th><th style="width:12%">Stock</th><th style="width:14%">Status</th><th style="width:14%">Add</th></tr></thead>
+<tbody id="inv-body"></tbody>
+</table>
+</div>
+</div>
+<div>
+<div class="sec-hdr"><span class="sec-title">Pickup requests</span></div>
+<div class="orders-list" id="orders-list"></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="co-modal">
+<div class="modal">
+<div class="modal-title">Schedule your pickup</div>
+<div class="fg"><label class="fl">Your name</label><input class="fi" id="co-name" type="text" placeholder="First name is fine"></div>
+<div class="fg"><label class="fl">Phone or email (optional)</label><input class="fi" id="co-contact" placeholder="In case we need to reach you"></div>
+<div class="fg"><label class="fl">Pickup day</label><select class="fi" id="co-day"><option value="">Choose a day...</option></select></div>
+<div class="fg"><label class="fl">Pickup time slot</label><select class="fi" id="co-time"><option value="">Choose a slot...</option></select></div>
+<div class="modal-actions">
+<button class="btn-sec" onclick="closeModal('co-modal')">Cancel</button>
+<button class="btn-pri" onclick="submitCheckout()">Confirm pickup</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="add-item-modal">
+<div class="modal">
+<div class="modal-title">Add new item</div>
+<div class="fg"><label class="fl">Item name</label><input class="fi" id="ni-name" placeholder="e.g. Pinto Beans"></div>
+<div class="fg"><label class="fl">Category</label>
+<select class="fi" id="ni-cat">
+<option>Canned Goods</option>
+<option>Dry Goods</option>
+<option>Bread &amp; Bakery</option>
+<option>Cereal &amp; Breakfast</option>
+<option>Home Goods</option>
+<option>Cleaning Supplies</option>
+<option>Hygiene Products</option>
+<option>Diapers &amp; Wipes</option>
+<option>Other Non-Perishables</option>
+</select>
+</div>
+<div class="fg"><label class="fl">Icon (emoji)</label><input class="fi" id="ni-icon" placeholder="📦" maxlength="4"></div>
+<div class="fg"><label class="fl">Starting quantity</label><input class="fi" id="ni-qty" type="number" min="0" value="10"></div>
+<div class="modal-actions">
+<button class="btn-sec" onclick="closeModal('add-item-modal')">Cancel</button>
+<button class="btn-pri" onclick="submitAddItem()">Add item</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="add-stock-modal">
+<div class="modal">
+<div class="modal-title" id="as-title">Add stock</div>
+<div class="fg"><label class="fl">Quantity to add</label><input class="fi" id="as-qty" type="number" min="1" value="5"></div>
+<div class="modal-actions">
+<button class="btn-sec" onclick="closeModal('add-stock-modal')">Cancel</button>
+<button class="btn-pri" onclick="submitAddStock()">Add to inventory</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="settings-modal">
+<div class="modal">
+<div class="modal-title">Pickup settings</div>
+<div class="fg"><label class="fl">Location / address</label><textarea class="fi" id="s-location" rows="2" placeholder="Church Hall - Room 102"></textarea></div>
+<div class="fg"><label class="fl">Available days (comma-separated)</label><input class="fi" id="s-days" placeholder="Monday, Wednesday, Friday"></div>
+<div class="fg"><label class="fl">Pickup hours</label><input class="fi" id="s-hours" placeholder="10:00 AM - 2:00 PM"></div>
+<div class="modal-actions">
+<button class="btn-sec" onclick="closeModal('settings-modal')">Cancel</button>
+<button class="btn-pri" onclick="saveSettings()">Save settings</button>
+</div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+var SURL = "https://cvfgtijbbotpmkjggebv.supabase.co";
+var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2Zmd0aWpiYm90cG1ramdnZWJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDg1OTgsImV4cCI6MjA5MTAyNDU5OH0.0MUWJs5Bh9C021U1p1BAbrAROEpzU2lYxHoSmsEeNYc";
+var ADMIN_PW = "church2024";
+var CATS = ["All","Canned Goods","Dry Goods","Bread & Bakery","Cereal & Breakfast","Home Goods","Cleaning Supplies","Hygiene Products","Diapers & Wipes","Other Non-Perishables"];
+var inventory = [];
+var orders = [];
+var settings = {location:"Church Hall - Room 102",days:["Monday","Wednesday","Friday"],hours:"10:00 AM - 2:00 PM"};
+var cart = {};
+var activeCat = "All";
+var addStockTargetId = null;
+var adminUnlocked = false;
+
+function dbCall(path, method, body, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open(method || "GET", SURL + "/rest/v1/" + path);
+  xhr.setRequestHeader("apikey", SKEY);
+  xhr.setRequestHeader("Authorization", "Bearer " + SKEY);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.setRequestHeader("Prefer", "return=representation");
+  xhr.onload = function() {
+    if(xhr.status >= 200 && xhr.status < 300) {
+      var result = xhr.responseText ? JSON.parse(xhr.responseText) : [];
+      if(callback) callback(null, result);
+    } else {
+      if(callback) callback(new Error(xhr.responseText));
+    }
+  };
+  xhr.onerror = function() { if(callback) callback(new Error("Network error")); };
+  xhr.send(body ? JSON.stringify(body) : null);
+}
+
+function init() {
+  dbCall("inventory?order=id", "GET", null, function(err, inv) {
+    if(err) { document.getElementById("shop-loading").innerHTML = "<div style='color:#993C1D;'>Could not connect to database. <button onclick='init()' style='margin-left:8px;padding:4px 10px;cursor:pointer;'>Retry</button></div>"; return; }
+    inventory = inv;
+    dbCall("orders?order=id", "GET", null, function(err2, ord) {
+      orders = ord || [];
+      dbCall("settings?id=eq.1", "GET", null, function(err3, sett) {
+        if(sett && sett.length) settings = {location:sett[0].location, days:sett[0].days, hours:sett[0].hours};
+        document.getElementById("shop-loading").style.display = "none";
+        document.getElementById("items-grid").style.display = "grid";
+        populatePickupSelects();
+        updateBanner();
+        renderShop();
+        renderCart();
+        startPolling();
+      });
+    });
+  });
+}
+
+function startPolling() {
+  setInterval(function() {
+    dbCall("inventory?order=id", "GET", null, function(err, inv) {
+      if(!err && JSON.stringify(inv) !== JSON.stringify(inventory)) {
+        inventory = inv;
+        renderShop();
+        if(adminUnlocked) renderAdmin();
+      }
+    });
+    dbCall("orders?order=id", "GET", null, function(err, ord) {
+      if(!err && JSON.stringify(ord) !== JSON.stringify(orders)) {
+        orders = ord;
+        if(adminUnlocked) renderAdmin();
+      }
+    });
+  }, 15000);
+}
+
+function generateSlots(h) {
+  var m = h.match(/(\d+):?(\d*)\s*(AM|PM)\s*[-]\s*(\d+):?(\d*)\s*(AM|PM)/i);
+  if(!m) return [h];
+  var sh=parseInt(m[1]),sm=parseInt(m[2]||0),sap=m[3].toUpperCase();
+  var eh=parseInt(m[4]),em=parseInt(m[5]||0),eap=m[6].toUpperCase();
+  var s=(sap==="PM"&&sh!==12?sh+12:sap==="AM"&&sh===12?0:sh)*60+sm;
+  var e2=(eap==="PM"&&eh!==12?eh+12:eap==="AM"&&eh===12?0:eh)*60+em;
+  var slots=[];
+  for(var t=s;t+60<=e2;t+=60) slots.push(ft(t)+" - "+ft(t+60));
+  return slots.length ? slots : [h];
+}
+function ft(m) {
+  var h=Math.floor(m/60),mn=m%60,ap=h<12?"AM":"PM";
+  if(h===0) h=12; else if(h>12) h-=12;
+  return h+":"+(mn<10?"0":"")+mn+" "+ap;
+}
+
+function populatePickupSelects() {
+  var d = document.getElementById("co-day");
+  d.innerHTML = "<option value=''>Choose a day...</option>";
+  for(var i=0;i<settings.days.length;i++) {
+    var o = document.createElement("option");
+    o.value = settings.days[i];
+    o.textContent = settings.days[i];
+    d.appendChild(o);
+  }
+  var t = document.getElementById("co-time");
+  t.innerHTML = "<option value=''>Choose a slot...</option>";
+  var slots = generateSlots(settings.hours || "10:00 AM - 2:00 PM");
+  for(var j=0;j<slots.length;j++) {
+    var o2 = document.createElement("option");
+    o2.value = slots[j];
+    o2.textContent = slots[j];
+    t.appendChild(o2);
+  }
+}
+
+function updateBanner() {
+  var loc = (settings.location || "").split("\n")[0];
+  document.getElementById("pickup-banner").innerHTML = "📍 " + loc + "  ·  " + settings.days.join(", ") + "  ·  " + settings.hours;
+}
+
+function showPage(p) {
+  var pages = document.querySelectorAll(".page");
+  for(var i=0;i<pages.length;i++) pages[i].classList.remove("active");
+  var tabs = document.querySelectorAll(".tab-btn");
+  for(var j=0;j<tabs.length;j++) tabs[j].classList.remove("active");
+  document.getElementById("page-"+p).classList.add("active");
+  document.getElementById("tab-"+p).classList.add("active");
+  if(p==="admin" && adminUnlocked) renderAdmin();
+}
+
+function renderShop() {
+  var bar = document.getElementById("cat-bar");
+  bar.innerHTML = "";
+  for(var i=0;i<CATS.length;i++) {
+    var btn = document.createElement("button");
+    btn.className = "cat-pill" + (CATS[i]===activeCat ? " active" : "");
+    btn.textContent = CATS[i];
+    btn.setAttribute("data-cat", CATS[i]);
+    btn.onclick = function() { setCat(this.getAttribute("data-cat")); };
+    bar.appendChild(btn);
+  }
+  var items = activeCat==="All" ? inventory : inventory.filter(function(i){ return i.cat===activeCat; });
+  var grid = document.getElementById("items-grid");
+  grid.innerHTML = "";
+  for(var k=0;k<items.length;k++) {
+    var item = items[k];
+    var qty = cart[item.id] || 0;
+    var out = item.stock <= 0;
+    var low = item.stock > 0 && item.stock <= 3;
+    var card = document.createElement("div");
+    card.className = "item-card" + (out ? " oos" : "");
+    var stockText = out ? "Out of stock" : (low ? "Only "+item.stock+" left" : item.stock+" available");
+    var stockClass = out ? "out" : (low ? "low" : "");
+    card.innerHTML = (qty>0 ? "<span class='in-cart-tag'>x"+qty+"</span>" : "") +
+      "<span class='item-icon'>"+item.icon+"</span>" +
+      "<div class='item-name'>"+item.name+"</div>" +
+      "<div class='item-cat'>"+item.cat+"</div>" +
+      "<div class='item-stock "+stockClass+"'>"+stockText+"</div>";
+    if(!out) {
+      var addBtn = document.createElement("button");
+      addBtn.className = "add-btn";
+      addBtn.textContent = "+";
+      addBtn.setAttribute("data-id", item.id);
+      addBtn.onclick = function(e) { e.stopPropagation(); addToCart(parseInt(this.getAttribute("data-id"))); };
+      card.appendChild(addBtn);
+    }
+    grid.appendChild(card);
+  }
+}
+
+function setCat(c) { activeCat = c; renderShop(); }
+
+function addToCart(id) {
+  var item = null;
+  for(var i=0;i<inventory.length;i++) if(inventory[i].id===id) { item=inventory[i]; break; }
+  if(!item) return;
+  var cur = cart[id] || 0;
+  if(cur >= item.stock) { toast("No more available!"); return; }
+  cart[id] = cur + 1;
+  updateCartDot();
+  renderShop();
+  toast(item.icon + " " + item.name + " added");
+}
+
+function updateCartDot() {
+  var total = 0;
+  for(var k in cart) total += cart[k];
+  var dot = document.getElementById("cart-dot");
+  dot.textContent = total;
+  dot.style.display = total > 0 ? "flex" : "none";
+}
+
+function renderCart() {
+  var keys = [];
+  for(var k in cart) if(cart[k]>0) keys.push(k);
+  document.getElementById("conf-area").innerHTML = "";
+  document.getElementById("co-btn").disabled = keys.length === 0;
+  if(!keys.length) {
+    document.getElementById("cart-body").innerHTML = "<div class='empty-msg'>No items selected yet.<br><span style='font-size:12px;color:var(--text-3);'>Head to the shop - everything is free!</span></div>";
+    return;
+  }
+  var html = "";
+  for(var i=0;i<keys.length;i++) {
+    var item = null;
+    for(var j=0;j<inventory.length;j++) if(inventory[j].id==keys[i]) { item=inventory[j]; break; }
+    if(!item) continue;
+    html += "<div class='cart-row'><span class='ci-icon'>"+item.icon+"</span><div class='ci-info'><div class='ci-name'>"+item.name+"</div><div class='ci-cat'>"+item.cat+"</div></div><div class='qty-ctrl'><button class='qty-btn' onclick='changeQty("+item.id+",-1)'>-</button><span class='qty-n'>"+cart[keys[i]]+"</span><button class='qty-btn' onclick='changeQty("+item.id+",1)'>+</button></div><button class='rm-btn' onclick='rmItem("+item.id+")'>x</button></div>";
+  }
+  document.getElementById("cart-body").innerHTML = html;
+}
+
+function changeQty(id,d) {
+  var item = null;
+  for(var i=0;i<inventory.length;i++) if(inventory[i].id===id) { item=inventory[i]; break; }
+  var nv = (cart[id]||0) + d;
+  if(nv > item.stock) { toast("No more available!"); return; }
+  if(nv <= 0) delete cart[id]; else cart[id] = nv;
+  updateCartDot(); renderCart();
+}
+function rmItem(id) { delete cart[id]; updateCartDot(); renderCart(); }
+function clearCart() { cart={}; updateCartDot(); renderCart(); }
+function openModal(id) { document.getElementById(id).classList.add("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+function submitCheckout() {
+  var name = document.getElementById("co-name").value.trim();
+  var day = document.getElementById("co-day").value;
+  var time = document.getElementById("co-time").value;
+  if(!name) { toast("Please enter your name"); return; }
+  if(!day||!time) { toast("Please choose a pickup day and time"); return; }
+  var keys = [];
+  for(var k in cart) if(cart[k]>0) keys.push(k);
+  var items = [];
+  for(var i=0;i<keys.length;i++) {
+    var item = null;
+    for(var j=0;j<inventory.length;j++) if(inventory[j].id==keys[i]) { item=inventory[j]; break; }
+    if(item) items.push({id:parseInt(keys[i]),qty:cart[keys[i]],name:item.name,icon:item.icon});
+  }
+  var pending = keys.length;
+  var errors = 0;
+  function done() {
+    pending--;
+    if(pending > 0) return;
+    if(errors > 0) { toast("Error saving. Please try again."); return; }
+    var order = {id:Date.now(),name:name,contact:document.getElementById("co-contact").value,day:day,time_slot:time,items:items,status:"pending",ts:new Date().toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})};
+    dbCall("orders","POST",order,function(err) {
+      if(err) { toast("Error saving order."); return; }
+      closeModal("co-modal");
+      document.getElementById("conf-area").innerHTML = "<div class='conf-box'><span class='conf-icon'>✅</span><div class='conf-title'>You are all set, "+name+"!</div><div class='conf-sub'>Your items will be held. Everything is free.</div><div class='conf-pickup'>📍 "+settings.location+"<br>📅 "+day+" - "+time+"</div><div class='conf-note'>Please show this confirmation when you arrive.</div></div>";
+      document.getElementById("cart-body").innerHTML = "<div class='empty-msg'>Pickup confirmed!</div>";
+      document.getElementById("co-btn").disabled = true;
+      cart = {}; updateCartDot(); toast("Pickup scheduled!");
+      dbCall("inventory?order=id","GET",null,function(err,inv){ if(!err){ inventory=inv; renderShop(); } });
+    });
+  }
+  for(var x=0;x<keys.length;x++) {
+    var inv_item = null;
+    for(var y=0;y<inventory.length;y++) if(inventory[y].id==keys[x]) { inv_item=inventory[y]; break; }
+    if(inv_item) {
+      dbCall("inventory?id=eq."+inv_item.id,"PATCH",{stock:inv_item.stock-cart[keys[x]]},function(err){ if(err) errors++; done(); });
+    }
+  }
+}
+
+function checkPw() {
+  if(document.getElementById("pw-input").value === ADMIN_PW) {
+    adminUnlocked = true;
+    document.getElementById("admin-lock").style.display = "none";
+    document.getElementById("admin-panel").style.display = "block";
+    renderAdmin();
+  } else {
+    document.getElementById("pw-err").style.display = "block";
+  }
+}
+
+function renderAdmin() {
+  var total=0,low=0,out=0,pending=0;
+  for(var i=0;i<inventory.length;i++) { total+=inventory[i].stock; if(inventory[i].stock<=0) out++; else if(inventory[i].stock<=3) low++; }
+  for(var j=0;j<orders.length;j++) if(orders[j].status!=="done") pending++;
+  document.getElementById("admin-stats").innerHTML = "<div class='stat-card'><div class='stat-label'>Item types</div><div class='stat-val'>"+inventory.length+"</div></div><div class='stat-card'><div class='stat-label'>Total units</div><div class='stat-val'>"+total+"</div></div><div class='stat-card'><div class='stat-label'>Low / out</div><div class='stat-val' style='color:var(--amber)'>"+(low+out)+"</div></div><div class='stat-card'><div class='stat-label'>Open orders</div><div class='stat-val' style='color:var(--teal)'>"+pending+"</div></div>";
+  document.getElementById("disp-location").innerHTML = settings.location;
+  document.getElementById("disp-days").textContent = settings.days.join(", ");
+  document.getElementById("disp-hours").textContent = settings.hours;
+  var sorted = inventory.slice().sort(function(a,b){return a.stock-b.stock;});
+  var rows = "";
+  for(var k=0;k<sorted.length;k++) {
+    var item=sorted[k];
+    var cls=item.stock<=0?"s-out":item.stock<=3?"s-low":"s-ok";
+    var lbl=item.stock<=0?"Out":item.stock<=3?"Low":"OK";
+    rows += "<tr><td>"+item.icon+" "+item.name+"</td><td style='color:var(--text-2)'>"+item.cat+"</td><td style='font-weight:700'>"+item.stock+"</td><td><span class='sbadge "+cls+"'>"+lbl+"</span></td><td><button class='as-btn' onclick='openAddStock("+item.id+")'>+ Add</button></td></tr>";
+  }
+  document.getElementById("inv-body").innerHTML = rows;
+  var ol = document.getElementById("orders-list");
+  if(!orders.length) { ol.innerHTML="<div style='color:var(--text-2);font-size:13px;padding:1rem 0;'>No pickup requests yet.</div>"; return; }
+  var ohtml = "";
+  var rev = orders.slice().reverse();
+  for(var m=0;m<rev.length;m++) {
+    var o=rev[m];
+    var ilist="";
+    for(var n=0;n<o.items.length;n++) ilist+=(n>0?", ":"")+o.items[n].icon+" "+o.items[n].name+" x"+o.items[n].qty;
+    var sc=o.status==="done"?"st-done":o.status==="ready"?"st-ready":"st-pending";
+    var sl=o.status==="done"?"Picked up":o.status==="ready"?"Ready for pickup":"Pending";
+    ohtml += "<div class='order-card'><div style='display:flex;justify-content:space-between;margin-bottom:8px;'><span style='font-size:14px;font-weight:600;color:var(--text);'>"+o.name+"</span><span style='font-size:11px;color:var(--text-3);'>"+o.day+" - "+(o.time_slot||"")+"</span></div>"+(o.contact?"<div style='font-size:12px;color:var(--text-3);margin-bottom:8px;'>"+o.contact+"</div>":"")+"<div style='font-size:13px;color:var(--text-2);margin-bottom:8px;'>"+ilist+"</div><span class='ostatus "+sc+"'>"+sl+"</span>"+(o.status!=="done"?"<button class='adv-btn' onclick='advOrder("+o.id+")'>"+(o.status==="pending"?"Mark ready":"Mark picked up")+"</button>":"")+"</div>";
+  }
+  ol.innerHTML = ohtml;
+}
+
+function advOrder(id) {
+  var o=null;
+  for(var i=0;i<orders.length;i++) if(orders[i].id===id){o=orders[i];break;}
+  var s = o.status==="pending"?"ready":"done";
+  dbCall("orders?id=eq."+id,"PATCH",{status:s},function(err){ if(!err){o.status=s;renderAdmin();}else{toast("Error: "+err.message);} });
+}
+
+function openAddStock(id) {
+  addStockTargetId=id;
+  var item=null;
+  for(var i=0;i<inventory.length;i++) if(inventory[i].id===id){item=inventory[i];break;}
+  document.getElementById("as-title").textContent="Add stock: "+item.name;
+  document.getElementById("as-qty").value=5;
+  openModal("add-stock-modal");
+}
+
+function submitAddStock() {
+  var qty=parseInt(document.getElementById("as-qty").value)||0;
+  if(qty<=0){toast("Enter a valid quantity");return;}
+  var item=null;
+  for(var i=0;i<inventory.length;i++) if(inventory[i].id===addStockTargetId){item=inventory[i];break;}
+  dbCall("inventory?id=eq."+item.id,"PATCH",{stock:item.stock+qty},function(err){
+    if(err){toast("Error: "+err.message);return;}
+    item.stock+=qty; closeModal("add-stock-modal"); renderAdmin(); renderShop();
+    toast("Added "+qty+" x "+item.name);
+  });
+}
+
+function submitAddItem() {
+  var name=document.getElementById("ni-name").value.trim();
+  var cat=document.getElementById("ni-cat").value;
+  var icon=document.getElementById("ni-icon").value.trim()||"📦";
+  var qty=parseInt(document.getElementById("ni-qty").value)||0;
+  if(!name){toast("Enter an item name");return;}
+  dbCall("inventory","POST",{name:name,cat:cat,icon:icon,stock:qty},function(err,r){
+    if(err){toast("Error: "+err.message);return;}
+    if(r&&r.length) inventory.push(r[0]);
+    closeModal("add-item-modal"); renderAdmin(); renderShop();
+    toast(icon+" "+name+" added");
+  });
+}
+
+function openSettingsModal() {
+  document.getElementById("s-location").value=settings.location||"";
+  document.getElementById("s-days").value=settings.days.join(", ");
+  document.getElementById("s-hours").value=settings.hours||"";
+  openModal("settings-modal");
+}
+
+function saveSettings() {
+  var loc=document.getElementById("s-location").value.trim();
+  var daysRaw=document.getElementById("s-days").value.split(",");
+  var days=[];
+  for(var i=0;i<daysRaw.length;i++){var d=daysRaw[i].trim();if(d)days.push(d);}
+  var hrs=document.getElementById("s-hours").value.trim();
+  if(!loc||!days.length||!hrs){toast("Please fill in all fields");return;}
+  dbCall("settings?id=eq.1","PATCH",{location:loc,days:days,hours:hrs},function(err){
+    if(err){toast("Error: "+err.message);return;}
+    settings={location:loc,days:days,hours:hrs};
+    populatePickupSelects(); updateBanner();
+    closeModal("settings-modal"); renderAdmin();
+    toast("Settings saved");
+  });
+}
+
+var overlays = document.querySelectorAll(".modal-overlay");
+for(var oi=0;oi<overlays.length;oi++) {
+  overlays[oi].addEventListener("click",function(e){if(e.target===this)this.classList.remove("open");});
+}
+
+var toastT;
+function toast(msg) {
+  var t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(function(){t.classList.remove("show");},2200);
+}
+
+init();
+</script>
 </body>
 </html>
