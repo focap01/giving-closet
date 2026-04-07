@@ -396,6 +396,7 @@ function showPage(p) {
   document.getElementById("page-"+p).classList.add("active");
   document.getElementById("tab-"+p).classList.add("active");
   if(p==="admin" && adminUnlocked) renderAdmin();
+if(p==="cart") renderCart();
 }
 
 function renderShop() {
