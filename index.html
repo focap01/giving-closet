@@ -462,8 +462,8 @@ function updateCartDot() {
 }
 
 function renderCart() {
-  var keys = [];
-  for(var k in cart) if(cart[k]>0) keys.push(k);
+var keys = [];
+for(var k in cart) if(cart[k]>0) keys.push(parseInt(k));
   document.getElementById("conf-area").innerHTML = "";
   document.getElementById("co-btn").disabled = keys.length === 0;
   if(!keys.length) {
@@ -473,7 +473,7 @@ function renderCart() {
   var html = "";
   for(var i=0;i<keys.length;i++) {
     var item = null;
-    for(var j=0;j<inventory.length;j++) if(inventory[j].id==keys[i]) { item=inventory[j]; break; }
+    for(var j=0;j<inventory.length;j++) if(inventory[j].id==parseInt(keys[i])) { item=inventory[j]; break; }
     if(!item) continue;
     html += "<div class='cart-row'><span class='ci-icon'>"+item.icon+"</span><div class='ci-info'><div class='ci-name'>"+item.name+"</div><div class='ci-cat'>"+item.cat+"</div></div><div class='qty-ctrl'><button class='qty-btn' onclick='changeQty("+item.id+",-1)'>-</button><span class='qty-n'>"+cart[keys[i]]+"</span><button class='qty-btn' onclick='changeQty("+item.id+",1)'>+</button></div><button class='rm-btn' onclick='rmItem("+item.id+")'>x</button></div>";
   }
