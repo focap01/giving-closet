@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Giving Closet</title>
+<title>The Supply Station</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f7f4;color:#1a1a18;min-height:100vh;}
 :root{
---green:#3B6D11;--green-light:#EAF3DE;--green-mid:#639922;--green-border:#C0DD97;
---teal:#0F6E56;--teal-light:#E1F5EE;--teal-mid:#1D9E75;--teal-border:#5DCAA5;
+--green:#1a4a1a;--green-light:#e8f0e8;--green-mid:#2d6e2d;--green-border:#8fba8f;
+--navy:#1a2744;--navy-light:#e8eaf0;--navy-mid:#2d3f6e;--navy-border:#8f9fba;
 --amber:#BA7517;--amber-light:#FAEEDA;
 --coral:#993C1D;--coral-light:#FAECE7;
 --gray-mid:#888780;
@@ -19,26 +19,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 --radius:8px;--radius-lg:12px;
 }
 .app{max-width:900px;margin:0 auto;padding:0 1rem 3rem;}
-.header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0;border-bottom:0.5px solid var(--border);margin-bottom:1.5rem;flex-wrap:wrap;gap:12px;}
-.logo-wrap{display:flex;align-items:center;gap:10px;}
-.logo-mark{width:38px;height:38px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:20px;border:0.5px solid var(--green-border);}
-.app-title{font-size:18px;font-weight:600;color:var(--text);}
-.app-sub{font-size:12px;color:var(--text-2);}
+.header{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:2px solid var(--navy);margin-bottom:1.5rem;flex-wrap:wrap;gap:12px;background:white;}
+.logo-wrap{display:flex;align-items:center;gap:12px;}
+.logo-img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--navy);}
+.app-title{font-size:20px;font-weight:700;color:var(--navy);}
+.app-sub{font-size:12px;color:var(--green-mid);font-weight:600;}
+.app-tagline{font-size:11px;color:var(--text-3);font-style:italic;}
 .nav-tabs{display:flex;gap:6px;}
-.tab-btn{padding:7px 16px;border-radius:var(--radius);border:0.5px solid var(--border-hover);background:transparent;font-size:13px;cursor:pointer;color:var(--text-2);transition:all 0.15s;position:relative;font-family:inherit;}
-.tab-btn.active{background:var(--green-light);color:var(--green);border-color:var(--green-border);font-weight:600;}
-.tab-btn:hover:not(.active){background:var(--surface-2);color:var(--text);}
+.tab-btn{padding:7px 16px;border-radius:var(--radius);border:1px solid var(--navy);background:transparent;font-size:13px;cursor:pointer;color:var(--navy);transition:all 0.15s;position:relative;font-family:inherit;font-weight:600;}
+.tab-btn.active{background:var(--navy);color:white;font-weight:600;}
+.tab-btn:hover:not(.active){background:var(--navy-light);}
 .cart-dot{position:absolute;top:-4px;right:-4px;background:var(--green-mid);color:white;border-radius:50%;width:17px;height:17px;font-size:10px;display:none;align-items:center;justify-content:center;font-weight:700;}
 .page{display:none;}
 .page.active{display:block;}
-.pickup-banner{background:var(--teal-light);border:0.5px solid var(--teal-border);border-radius:var(--radius-lg);padding:10px 16px;margin-bottom:1.25rem;font-size:13px;color:var(--teal);font-weight:500;}
+.pickup-banner{background:var(--navy-light);border:1px solid var(--navy-border);border-radius:var(--radius-lg);padding:10px 16px;margin-bottom:1.25rem;font-size:13px;color:var(--navy);font-weight:600;}
+.welcome-banner{background:var(--green-light);border:1px solid var(--green-border);border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:1.25rem;font-size:13px;color:var(--green);text-align:center;line-height:1.6;}
 .cat-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;}
-.cat-pill{padding:5px 13px;border-radius:999px;border:0.5px solid var(--border-hover);font-size:12px;cursor:pointer;color:var(--text-2);background:transparent;transition:all 0.15s;white-space:nowrap;font-family:inherit;}
-.cat-pill.active{background:var(--teal-light);color:var(--teal);border-color:var(--teal-border);font-weight:600;}
-.cat-pill:hover:not(.active){background:var(--surface-2);color:var(--text);}
+.cat-pill{padding:5px 13px;border-radius:999px;border:1px solid var(--navy-border);font-size:12px;cursor:pointer;color:var(--navy);background:transparent;transition:all 0.15s;white-space:nowrap;font-family:inherit;font-weight:500;}
+.cat-pill.active{background:var(--navy);color:white;border-color:var(--navy);font-weight:600;}
+.cat-pill:hover:not(.active){background:var(--navy-light);}
 .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
-.item-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:border-color 0.15s;position:relative;}
-.item-card:hover:not(.oos){border-color:var(--border-hover);}
+.item-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:border-color 0.15s;position:relative;}
+.item-card:hover:not(.oos){border-color:var(--navy);}
 .item-card.oos{opacity:0.5;}
 .item-icon{font-size:28px;margin-bottom:8px;display:block;}
 .item-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
@@ -46,13 +48,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .item-stock{font-size:11px;color:var(--text-3);}
 .item-stock.low{color:var(--amber);font-weight:600;}
 .item-stock.out{color:var(--coral);font-weight:600;}
-.add-btn{position:absolute;bottom:10px;right:10px;width:28px;height:28px;border-radius:50%;background:var(--green-light);border:0.5px solid var(--green-border);color:var(--green);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;font-weight:600;}
+.add-btn{position:absolute;bottom:10px;right:10px;width:28px;height:28px;border-radius:50%;background:var(--green-light);border:1px solid var(--green-border);color:var(--green-mid);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;font-weight:600;}
 .add-btn:hover{background:var(--green-border);}
 .in-cart-tag{position:absolute;top:8px;right:8px;background:var(--green-mid);color:white;border-radius:999px;font-size:10px;padding:2px 7px;font-weight:700;}
-.cart-panel{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem;}
+.cart-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem;}
 .cart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
 .cart-title{font-size:15px;font-weight:600;color:var(--text);}
-.clear-btn{padding:5px 12px;border-radius:var(--radius);border:0.5px solid var(--border-hover);background:transparent;font-size:12px;cursor:pointer;color:var(--text-2);font-family:inherit;}
+.clear-btn{padding:5px 12px;border-radius:var(--radius);border:1px solid var(--border-hover);background:transparent;font-size:12px;cursor:pointer;color:var(--text-2);font-family:inherit;}
 .empty-msg{text-align:center;padding:2.5rem 1rem;color:var(--text-2);font-size:14px;line-height:1.6;}
 .cart-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);}
 .cart-row:last-of-type{border-bottom:none;}
@@ -61,65 +63,70 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ci-name{font-size:13px;font-weight:600;color:var(--text);}
 .ci-cat{font-size:11px;color:var(--text-3);}
 .qty-ctrl{display:flex;align-items:center;gap:6px;}
-.qty-btn{width:24px;height:24px;border-radius:5px;border:0.5px solid var(--border-hover);background:transparent;cursor:pointer;font-size:15px;color:var(--text);display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.qty-btn{width:24px;height:24px;border-radius:5px;border:1px solid var(--border-hover);background:transparent;cursor:pointer;font-size:15px;color:var(--text);display:flex;align-items:center;justify-content:center;font-family:inherit;}
 .qty-btn:hover{background:var(--surface-2);}
 .qty-n{font-size:13px;font-weight:600;min-width:22px;text-align:center;color:var(--text);}
 .rm-btn{background:none;border:none;cursor:pointer;color:var(--text-3);font-size:15px;padding:3px 5px;border-radius:5px;}
 .rm-btn:hover{color:var(--coral);background:var(--coral-light);}
-.checkout-btn{width:100%;padding:11px;background:var(--green-mid);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;margin-top:1rem;transition:background 0.15s;font-family:inherit;}
-.checkout-btn:hover{background:var(--green);}
+.checkout-btn{width:100%;padding:11px;background:var(--navy);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;margin-top:1rem;transition:background 0.15s;font-family:inherit;}
+.checkout-btn:hover{background:var(--navy-mid);}
 .checkout-btn:disabled{background:var(--gray-mid);cursor:not-allowed;}
-.conf-box{background:var(--teal-light);border:0.5px solid var(--teal-border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;}
+.conf-box{background:var(--green-light);border:1px solid var(--green-border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;}
 .conf-icon{font-size:36px;display:block;margin-bottom:10px;}
-.conf-title{font-size:17px;font-weight:600;color:var(--teal);margin-bottom:6px;}
+.conf-title{font-size:17px;font-weight:700;color:var(--green-mid);margin-bottom:6px;}
 .conf-sub{font-size:13px;color:var(--text-2);line-height:1.6;}
-.conf-pickup{font-size:14px;font-weight:600;color:var(--teal);margin-top:12px;padding:12px 14px;background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--teal-border);line-height:2;}
+.conf-pickup{font-size:14px;font-weight:600;color:var(--navy);margin-top:12px;padding:12px 14px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--navy-border);line-height:2;}
 .conf-note{margin-top:10px;font-size:12px;color:var(--text-3);}
+.conf-prayer{margin-top:12px;font-size:13px;color:var(--green-mid);font-style:italic;font-weight:600;}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:1rem;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--surface);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:440px;border:0.5px solid var(--border);max-height:90vh;overflow-y:auto;}
-.modal-title{font-size:16px;font-weight:600;margin-bottom:1.25rem;color:var(--text);}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:480px;border:1px solid var(--border);max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:1.25rem;color:var(--navy);}
 .fg{margin-bottom:1rem;}
-.fl{font-size:12px;color:var(--text-2);display:block;margin-bottom:5px;font-weight:500;}
-.fi{width:100%;padding:9px 11px;border:0.5px solid var(--border-hover);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:inherit;}
-.fi:focus{outline:none;border-color:var(--teal-mid);}
+.fl{font-size:12px;color:var(--text-2);display:block;margin-bottom:5px;font-weight:600;}
+.fl .req{color:var(--coral);}
+.fi{width:100%;padding:9px 11px;border:1px solid var(--border-hover);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:inherit;}
+.fi:focus{outline:none;border-color:var(--navy);}
+.fi.error{border-color:var(--coral);}
 .modal-actions{display:flex;gap:8px;margin-top:1.25rem;}
-.btn-sec{flex:1;padding:10px;border:0.5px solid var(--border-hover);background:transparent;border-radius:var(--radius);font-size:13px;cursor:pointer;color:var(--text-2);font-family:inherit;}
-.btn-pri{flex:2;padding:10px;background:var(--green-mid);color:white;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
-.btn-pri:hover{background:var(--green);}
+.btn-sec{flex:1;padding:10px;border:1px solid var(--border-hover);background:transparent;border-radius:var(--radius);font-size:13px;cursor:pointer;color:var(--text-2);font-family:inherit;}
+.btn-pri{flex:2;padding:10px;background:var(--navy);color:white;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-pri:hover{background:var(--navy-mid);}
 .stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.75rem;}
 .stat-card{background:var(--surface-2);border-radius:var(--radius);padding:14px;}
 .stat-label{font-size:11px;color:var(--text-3);margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:0.03em;}
 .stat-val{font-size:24px;font-weight:700;color:var(--text);}
-.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:8px;border-bottom:0.5px solid var(--border);}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border);}
 .sec-title{font-size:15px;font-weight:600;color:var(--text);}
-.add-item-btn{padding:7px 14px;border-radius:var(--radius);background:var(--green-mid);color:white;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.add-item-btn{padding:7px 14px;border-radius:var(--radius);background:var(--navy);color:white;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
 .inv-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
-.inv-table th{text-align:left;padding:9px 10px;font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;border-bottom:0.5px solid var(--border);}
+.inv-table th{text-align:left;padding:9px 10px;font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border);}
 .inv-table td{padding:11px 10px;border-bottom:0.5px solid var(--border);vertical-align:middle;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .inv-table tr:last-child td{border-bottom:none;}
+.inv-table tbody tr:hover{background:var(--surface-2);}
 .sbadge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;}
-.s-ok{background:var(--green-light);color:var(--green);}
+.s-ok{background:var(--green-light);color:var(--green-mid);}
 .s-low{background:var(--amber-light);color:var(--amber);}
 .s-out{background:var(--coral-light);color:var(--coral);}
-.as-btn{padding:4px 11px;border-radius:var(--radius);border:0.5px solid var(--green-border);background:var(--green-light);color:var(--green);font-size:12px;cursor:pointer;font-weight:600;font-family:inherit;}
+.as-btn{padding:4px 11px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-light);color:var(--green-mid);font-size:12px;cursor:pointer;font-weight:600;font-family:inherit;}
 .orders-list{display:flex;flex-direction:column;gap:10px;}
-.order-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;}
+.order-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;}
 .ostatus{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;font-weight:600;}
 .st-pending{background:var(--amber-light);color:var(--amber);}
-.st-ready{background:var(--teal-light);color:var(--teal);}
-.st-done{background:var(--green-light);color:var(--green);}
-.adv-btn{padding:4px 11px;border-radius:var(--radius);border:0.5px solid var(--teal-border);background:var(--teal-light);color:var(--teal);font-size:12px;cursor:pointer;margin-left:8px;font-weight:600;font-family:inherit;}
-.settings-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:2rem;}
+.st-ready{background:var(--navy-light);color:var(--navy);}
+.st-done{background:var(--green-light);color:var(--green-mid);}
+.adv-btn{padding:4px 11px;border-radius:var(--radius);border:1px solid var(--navy-border);background:var(--navy-light);color:var(--navy);font-size:12px;cursor:pointer;margin-left:8px;font-weight:600;font-family:inherit;}
+.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:2rem;}
 .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
 .settings-label{font-size:11px;color:var(--text-3);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;}
 .settings-val{font-size:14px;font-weight:600;color:var(--text);line-height:1.6;}
-.edit-btn{padding:5px 12px;border-radius:var(--radius);border:0.5px solid var(--teal-border);background:transparent;color:var(--teal);font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;margin-top:8px;display:inline-block;}
+.edit-btn{padding:5px 12px;border-radius:var(--radius);border:1px solid var(--navy-border);background:transparent;color:var(--navy);font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;margin-top:8px;display:inline-block;}
 .loading-bar{text-align:center;padding:3rem 1rem;color:var(--text-2);font-size:14px;}
-.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--green-mid);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:10px;}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:10px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:0.5px solid var(--border-hover);border-radius:var(--radius-lg);padding:10px 18px;font-size:13px;font-weight:600;color:var(--text);z-index:999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none;}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:white;border-radius:var(--radius-lg);padding:10px 18px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateY(0);}
+.privacy-note{font-size:11px;color:var(--text-3);text-align:center;margin-top:8px;line-height:1.5;}
 @media(max-width:600px){
 .stats-row{grid-template-columns:repeat(2,1fr);}
 .settings-grid{grid-template-columns:1fr;}
@@ -132,10 +139,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app">
 <div class="header">
 <div class="logo-wrap">
-<div class="logo-mark">🤲</div>
+<img class="logo-img" src="https://i.imgur.com/placeholder.png" id="logo-img" alt="The Supply Station" onerror="this.style.display='none'">
 <div>
-<div class="app-title">Giving Closet</div>
-<div class="app-sub">Live shared inventory</div>
+<div class="app-title">The Supply Station</div>
+<div class="app-sub">Faith Outreach Church</div>
+<div class="app-tagline">Real Help. Real Hope.</div>
 </div>
 </div>
 <div class="nav-tabs">
@@ -146,6 +154,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="page active" id="page-shop">
+<div class="welcome-banner">
+Welcome to The Supply Station! Browse our available items and request a free pickup.<br>
+<strong>Supplies. Support. Prayer.</strong> — We'll pray with you.
+</div>
 <div class="pickup-banner" id="pickup-banner"></div>
 <div class="cat-bar" id="cat-bar"></div>
 <div id="shop-loading" class="loading-bar"><div class="spinner"></div><br>Loading inventory...</div>
@@ -167,7 +179,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="page" id="page-admin">
 <div id="admin-lock" style="text-align:center;padding:4rem 1rem;">
 <div style="font-size:40px;margin-bottom:16px;">🔐</div>
-<div style="font-size:16px;font-weight:600;margin-bottom:8px;color:var(--text);">Admin access</div>
+<div style="font-size:16px;font-weight:600;margin-bottom:8px;color:var(--navy);">Admin access</div>
 <div style="font-size:13px;color:var(--text-2);margin-bottom:1.5rem;">Enter the admin password to manage inventory and settings.</div>
 <input type="password" class="fi" id="pw-input" placeholder="Password" style="max-width:260px;margin:0 auto 12px;display:block;" onkeydown="if(event.key==='Enter')checkPw()">
 <button class="btn-pri" style="max-width:140px;display:block;margin:0 auto;" onclick="checkPw()">Enter</button>
@@ -213,11 +225,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="modal-overlay" id="co-modal">
 <div class="modal">
-<div class="modal-title">Schedule your pickup</div>
-<div class="fg"><label class="fl">Your name</label><input class="fi" id="co-name" type="text" placeholder="First name is fine"></div>
-<div class="fg"><label class="fl">Phone or email (optional)</label><input class="fi" id="co-contact" placeholder="In case we need to reach you"></div>
-<div class="fg"><label class="fl">Pickup day</label><select class="fi" id="co-day"><option value="">Choose a day...</option></select></div>
-<div class="fg"><label class="fl">Pickup time slot</label><select class="fi" id="co-time"><option value="">Choose a slot...</option></select></div>
+<div class="modal-title">Schedule your free pickup</div>
+<div class="fg"><label class="fl">Your name <span class="req">*</span></label><input class="fi" id="co-name" type="text" placeholder="First and last name"></div>
+<div class="fg"><label class="fl">Phone number <span class="req">*</span></label><input class="fi" id="co-phone" type="tel" placeholder="555-123-4567"></div>
+<div class="fg"><label class="fl">Email address <span class="req">*</span></label><input class="fi" id="co-email" type="email" placeholder="your@email.com"></div>
+<div class="fg"><label class="fl">Street address <span class="req">*</span></label><input class="fi" id="co-street" type="text" placeholder="123 Main Street"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;">
+<div><label class="fl">City <span class="req">*</span></label><input class="fi" id="co-city" type="text" placeholder="City"></div>
+<div><label class="fl">Zip <span class="req">*</span></label><input class="fi" id="co-zip" type="text" placeholder="12345"></div>
+</div>
+<div class="fg"><label class="fl">Pickup day <span class="req">*</span></label><select class="fi" id="co-day"><option value="">Choose a day...</option></select></div>
+<div class="fg"><label class="fl">Pickup time slot <span class="req">*</span></label><select class="fi" id="co-time"><option value="">Choose a slot...</option></select></div>
+<div class="privacy-note">Your information is used only for pickup coordination and is never shared.</div>
 <div class="modal-actions">
 <button class="btn-sec" onclick="closeModal('co-modal')">Cancel</button>
 <button class="btn-pri" onclick="submitCheckout()">Confirm pickup</button>
@@ -276,18 +295,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
 var SURL = "https://cvfgtijbbotpmkjggebv.supabase.co";
 var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2Zmd0aWpiYm90cG1ramdnZWJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDg1OTgsImV4cCI6MjA5MTAyNDU5OH0.0MUWJs5Bh9C021U1p1BAbrAROEpzU2lYxHoSmsEeNYc";
+var EJS_SERVICE = "service_2ep9jbh";
+var EJS_TEMPLATE = "template_tcdbeds";
+var EJS_KEY = "32rnTvuKEeetIvjkR";
 var ADMIN_PW = "church2024";
 var CATS = ["All","Canned Goods","Dry Goods","Bread & Bakery","Cereal & Breakfast","Home Goods","Cleaning Supplies","Hygiene Products","Diapers & Wipes","Other Non-Perishables"];
-var inventory = [];
-var orders = [];
-var settings = {location:"Church Hall - Room 102",days:["Monday","Wednesday","Friday"],hours:"10:00 AM - 2:00 PM"};
-var cart = {};
-var activeCat = "All";
-var addStockTargetId = null;
-var adminUnlocked = false;
+
+emailjs.init(EJS_KEY);
+
+var LOGO_URL = "https://raw.githubusercontent.com/focap01/giving-closet/main/logo.png";
+document.getElementById("logo-img").src = LOGO_URL;
+
+var inventory=[], orders=[], settings={location:"Faith Outreach Church",days:["Monday","Wednesday","Friday"],hours:"10:00 AM - 2:00 PM"};
+var cart={}, activeCat="All", addStockTargetId=null, adminUnlocked=false;
 
 function dbCall(path, method, body, callback) {
   var xhr = new XMLHttpRequest();
@@ -310,7 +334,10 @@ function dbCall(path, method, body, callback) {
 
 function init() {
   dbCall("inventory?order=id", "GET", null, function(err, inv) {
-    if(err) { document.getElementById("shop-loading").innerHTML = "<div style='color:#993C1D;'>Could not connect to database. <button onclick='init()' style='margin-left:8px;padding:4px 10px;cursor:pointer;'>Retry</button></div>"; return; }
+    if(err) {
+      document.getElementById("shop-loading").innerHTML = "<div style='color:#993C1D;'>Could not connect. <button onclick='init()' style='margin-left:8px;padding:4px 10px;cursor:pointer;border:1px solid #ccc;border-radius:4px;background:white;'>Retry</button></div>";
+      return;
+    }
     inventory = inv;
     dbCall("orders?order=id", "GET", null, function(err2, ord) {
       orders = ord || [];
@@ -396,7 +423,7 @@ function showPage(p) {
   document.getElementById("page-"+p).classList.add("active");
   document.getElementById("tab-"+p).classList.add("active");
   if(p==="admin" && adminUnlocked) renderAdmin();
-if(p==="cart") renderCart();
+  if(p==="cart") renderCart();
 }
 
 function renderShop() {
@@ -462,8 +489,8 @@ function updateCartDot() {
 }
 
 function renderCart() {
-var keys = [];
-for(var k in cart) if(cart[k]>0) keys.push(parseInt(k));
+  var keys = [];
+  for(var k in cart) if(cart[k]>0) keys.push(k);
   document.getElementById("conf-area").innerHTML = "";
   document.getElementById("co-btn").disabled = keys.length === 0;
   if(!keys.length) {
@@ -473,7 +500,7 @@ for(var k in cart) if(cart[k]>0) keys.push(parseInt(k));
   var html = "";
   for(var i=0;i<keys.length;i++) {
     var item = null;
-    for(var j=0;j<inventory.length;j++) if(inventory[j].id==parseInt(keys[i])) { item=inventory[j]; break; }
+    for(var j=0;j<inventory.length;j++) if(inventory[j].id==keys[i]) { item=inventory[j]; break; }
     if(!item) continue;
     html += "<div class='cart-row'><span class='ci-icon'>"+item.icon+"</span><div class='ci-info'><div class='ci-name'>"+item.name+"</div><div class='ci-cat'>"+item.cat+"</div></div><div class='qty-ctrl'><button class='qty-btn' onclick='changeQty("+item.id+",-1)'>-</button><span class='qty-n'>"+cart[keys[i]]+"</span><button class='qty-btn' onclick='changeQty("+item.id+",1)'>+</button></div><button class='rm-btn' onclick='rmItem("+item.id+")'>x</button></div>";
   }
@@ -495,35 +522,76 @@ function closeModal(id) { document.getElementById(id).classList.remove("open"); 
 
 function submitCheckout() {
   var name = document.getElementById("co-name").value.trim();
+  var phone = document.getElementById("co-phone").value.trim();
+  var email = document.getElementById("co-email").value.trim();
+  var street = document.getElementById("co-street").value.trim();
+  var city = document.getElementById("co-city").value.trim();
+  var zip = document.getElementById("co-zip").value.trim();
   var day = document.getElementById("co-day").value;
   var time = document.getElementById("co-time").value;
+
   if(!name) { toast("Please enter your name"); return; }
+  if(!phone) { toast("Please enter your phone number"); return; }
+  if(!email) { toast("Please enter your email address"); return; }
+  if(!street || !city || !zip) { toast("Please enter your full address"); return; }
   if(!day||!time) { toast("Please choose a pickup day and time"); return; }
+
+  var address = street + ", " + city + " " + zip;
   var keys = [];
   for(var k in cart) if(cart[k]>0) keys.push(k);
   var items = [];
+  var itemsText = "";
   for(var i=0;i<keys.length;i++) {
     var item = null;
     for(var j=0;j<inventory.length;j++) if(inventory[j].id==keys[i]) { item=inventory[j]; break; }
-    if(item) items.push({id:parseInt(keys[i]),qty:cart[keys[i]],name:item.name,icon:item.icon});
+    if(item) {
+      items.push({id:parseInt(keys[i]),qty:cart[keys[i]],name:item.name,icon:item.icon});
+      itemsText += item.icon + " " + item.name + " x" + cart[keys[i]] + "\n";
+    }
   }
+
   var pending = keys.length;
   var errors = 0;
   function done() {
     pending--;
     if(pending > 0) return;
     if(errors > 0) { toast("Error saving. Please try again."); return; }
-    var order = {id:Date.now(),name:name,contact:document.getElementById("co-contact").value,day:day,time_slot:time,items:items,status:"pending",ts:new Date().toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})};
+    var order = {
+      id: Date.now(),
+      name: name,
+      contact: phone + " | " + email,
+      day: day,
+      time_slot: time,
+      items: items,
+      status: "pending",
+      ts: new Date().toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})
+    };
     dbCall("orders","POST",order,function(err) {
       if(err) { toast("Error saving order."); return; }
+
+      emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+        name: name,
+        phone: phone,
+        email: email,
+        address: address,
+        day: day,
+        time: time,
+        items: itemsText
+      }).then(function() {
+        console.log("Email sent!");
+      }, function(error) {
+        console.log("Email error:", error);
+      });
+
       closeModal("co-modal");
-      document.getElementById("conf-area").innerHTML = "<div class='conf-box'><span class='conf-icon'>✅</span><div class='conf-title'>You are all set, "+name+"!</div><div class='conf-sub'>Your items will be held. Everything is free.</div><div class='conf-pickup'>📍 "+settings.location+"<br>📅 "+day+" - "+time+"</div><div class='conf-note'>Please show this confirmation when you arrive.</div></div>";
+      document.getElementById("conf-area").innerHTML = "<div class='conf-box'><span class='conf-icon'>✅</span><div class='conf-title'>You are all set, "+name+"!</div><div class='conf-sub'>Your items will be held for pickup. Everything is completely free.</div><div class='conf-pickup'>📍 "+settings.location+"<br>📅 "+day+" - "+time+"</div><div class='conf-note'>Please show this confirmation when you arrive.</div><div class='conf-prayer'>We will pray with you. God bless you!</div></div>";
       document.getElementById("cart-body").innerHTML = "<div class='empty-msg'>Pickup confirmed!</div>";
       document.getElementById("co-btn").disabled = true;
       cart = {}; updateCartDot(); toast("Pickup scheduled!");
       dbCall("inventory?order=id","GET",null,function(err,inv){ if(!err){ inventory=inv; renderShop(); } });
     });
   }
+
   for(var x=0;x<keys.length;x++) {
     var inv_item = null;
     for(var y=0;y<inventory.length;y++) if(inventory[y].id==keys[x]) { inv_item=inventory[y]; break; }
@@ -548,7 +616,7 @@ function renderAdmin() {
   var total=0,low=0,out=0,pending=0;
   for(var i=0;i<inventory.length;i++) { total+=inventory[i].stock; if(inventory[i].stock<=0) out++; else if(inventory[i].stock<=3) low++; }
   for(var j=0;j<orders.length;j++) if(orders[j].status!=="done") pending++;
-  document.getElementById("admin-stats").innerHTML = "<div class='stat-card'><div class='stat-label'>Item types</div><div class='stat-val'>"+inventory.length+"</div></div><div class='stat-card'><div class='stat-label'>Total units</div><div class='stat-val'>"+total+"</div></div><div class='stat-card'><div class='stat-label'>Low / out</div><div class='stat-val' style='color:var(--amber)'>"+(low+out)+"</div></div><div class='stat-card'><div class='stat-label'>Open orders</div><div class='stat-val' style='color:var(--teal)'>"+pending+"</div></div>";
+  document.getElementById("admin-stats").innerHTML = "<div class='stat-card'><div class='stat-label'>Item types</div><div class='stat-val'>"+inventory.length+"</div></div><div class='stat-card'><div class='stat-label'>Total units</div><div class='stat-val'>"+total+"</div></div><div class='stat-card'><div class='stat-label'>Low / out</div><div class='stat-val' style='color:var(--amber)'>"+(low+out)+"</div></div><div class='stat-card'><div class='stat-label'>Open orders</div><div class='stat-val' style='color:var(--navy)'>"+pending+"</div></div>";
   document.getElementById("disp-location").innerHTML = settings.location;
   document.getElementById("disp-days").textContent = settings.days.join(", ");
   document.getElementById("disp-hours").textContent = settings.hours;
@@ -571,7 +639,7 @@ function renderAdmin() {
     for(var n=0;n<o.items.length;n++) ilist+=(n>0?", ":"")+o.items[n].icon+" "+o.items[n].name+" x"+o.items[n].qty;
     var sc=o.status==="done"?"st-done":o.status==="ready"?"st-ready":"st-pending";
     var sl=o.status==="done"?"Picked up":o.status==="ready"?"Ready for pickup":"Pending";
-    ohtml += "<div class='order-card'><div style='display:flex;justify-content:space-between;margin-bottom:8px;'><span style='font-size:14px;font-weight:600;color:var(--text);'>"+o.name+"</span><span style='font-size:11px;color:var(--text-3);'>"+o.day+" - "+(o.time_slot||"")+"</span></div>"+(o.contact?"<div style='font-size:12px;color:var(--text-3);margin-bottom:8px;'>"+o.contact+"</div>":"")+"<div style='font-size:13px;color:var(--text-2);margin-bottom:8px;'>"+ilist+"</div><span class='ostatus "+sc+"'>"+sl+"</span>"+(o.status!=="done"?"<button class='adv-btn' onclick='advOrder("+o.id+")'>"+(o.status==="pending"?"Mark ready":"Mark picked up")+"</button>":"")+"</div>";
+    ohtml += "<div class='order-card'><div style='display:flex;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:4px;'><span style='font-size:14px;font-weight:600;color:var(--text);'>"+o.name+"</span><span style='font-size:11px;color:var(--text-3);'>"+o.day+" - "+(o.time_slot||"")+" - "+o.ts+"</span></div><div style='font-size:12px;color:var(--text-3);margin-bottom:6px;'>"+o.contact+"</div><div style='font-size:13px;color:var(--text-2);margin-bottom:8px;line-height:1.6;'>"+ilist+"</div><span class='ostatus "+sc+"'>"+sl+"</span>"+(o.status!=="done"?"<button class='adv-btn' onclick='advOrder("+o.id+")'>"+(o.status==="pending"?"Mark ready":"Mark picked up")+"</button>":"")+"</div>";
   }
   ol.innerHTML = ohtml;
 }
@@ -580,7 +648,7 @@ function advOrder(id) {
   var o=null;
   for(var i=0;i<orders.length;i++) if(orders[i].id===id){o=orders[i];break;}
   var s = o.status==="pending"?"ready":"done";
-  dbCall("orders?id=eq."+id,"PATCH",{status:s},function(err){ if(!err){o.status=s;renderAdmin();}else{toast("Error: "+err.message);} });
+  dbCall("orders?id=eq."+id,"PATCH",{status:s},function(err){ if(!err){o.status=s;renderAdmin();}else{toast("Error updating order.");} });
 }
 
 function openAddStock(id) {
@@ -598,7 +666,7 @@ function submitAddStock() {
   var item=null;
   for(var i=0;i<inventory.length;i++) if(inventory[i].id===addStockTargetId){item=inventory[i];break;}
   dbCall("inventory?id=eq."+item.id,"PATCH",{stock:item.stock+qty},function(err){
-    if(err){toast("Error: "+err.message);return;}
+    if(err){toast("Error updating stock.");return;}
     item.stock+=qty; closeModal("add-stock-modal"); renderAdmin(); renderShop();
     toast("Added "+qty+" x "+item.name);
   });
@@ -611,7 +679,7 @@ function submitAddItem() {
   var qty=parseInt(document.getElementById("ni-qty").value)||0;
   if(!name){toast("Enter an item name");return;}
   dbCall("inventory","POST",{name:name,cat:cat,icon:icon,stock:qty},function(err,r){
-    if(err){toast("Error: "+err.message);return;}
+    if(err){toast("Error adding item.");return;}
     if(r&&r.length) inventory.push(r[0]);
     closeModal("add-item-modal"); renderAdmin(); renderShop();
     toast(icon+" "+name+" added");
@@ -633,7 +701,7 @@ function saveSettings() {
   var hrs=document.getElementById("s-hours").value.trim();
   if(!loc||!days.length||!hrs){toast("Please fill in all fields");return;}
   dbCall("settings?id=eq.1","PATCH",{location:loc,days:days,hours:hrs},function(err){
-    if(err){toast("Error: "+err.message);return;}
+    if(err){toast("Error saving settings.");return;}
     settings={location:loc,days:days,hours:hrs};
     populatePickupSelects(); updateBanner();
     closeModal("settings-modal"); renderAdmin();
