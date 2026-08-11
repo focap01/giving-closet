@@ -429,7 +429,7 @@ var SURL = "https://cvfgtijbbotpmkjggebv.supabase.co";
 var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2Zmd0aWpiYm90cG1ramdnZWJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDg1OTgsImV4cCI6MjA5MTAyNDU5OH0.0MUWJs5Bh9C021U1p1BAbrAROEpzU2lYxHoSmsEeNYc";
 var EJS_SERVICE = "service_2ep9jbh";
 var EJS_TEMPLATE = "template_tcdbeds";
-var EJS_TEMPLATE_REQUEST = "template_tcdbeds";
+var EJS_TEMPLATE_REQUEST = "template_2hixsnr";
 var EJS_KEY = "32rnTvuKEeetIvjkR";
 var ADMIN_PW = "church2024";
 var CATS = ["All","Canned Goods","Dry Goods","Bread & Bakery","Cereal & Breakfast","Home Goods","Cleaning Supplies","Hygiene Products","Diapers & Wipes","Other Non-Perishables"];
@@ -747,7 +747,7 @@ function submitRequest() {
 
   dbCall("requests","POST",reqData,function(err) {
     if(err) { toast("Error submitting request. Please try again."); return; }
-    emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+    emailjs.send(EJS_SERVICE, EJS_TEMPLATE_REQUEST, {
       name: name, phone: phone, email: email,
       address: address,
       day: "Household: "+adults+" adults, "+numchildren+" children"+(childages?" (ages: "+childages+")":""),
