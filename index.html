@@ -750,9 +750,11 @@ function submitRequest() {
     emailjs.send(EJS_SERVICE, EJS_TEMPLATE_REQUEST, {
       name: name, phone: phone, email: email,
       address: address,
-      day: "Household: "+adults+" adults, "+numchildren+" children"+(childages?" (ages: "+childages+")":""),
-      time: "Needs: "+needs.join(", "),
-      items: notes || "No additional notes"
+      adults: adults,
+      num_children: numchildren,
+      child_ages: childages || "N/A",
+      needs: needs.join(", "),
+      notes: notes || "No additional notes"
     });
     closeModal("request-modal");
     document.getElementById("access-gate").innerHTML =
