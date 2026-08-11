@@ -34,6 +34,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .page.active{display:block;}
 .pickup-banner{background:var(--navy-light);border:1px solid var(--navy-border);border-radius:var(--radius-lg);padding:10px 16px;margin-bottom:1.25rem;font-size:13px;color:var(--navy);font-weight:600;}
 .welcome-banner{background:var(--green-light);border:1px solid var(--green-border);border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:1.25rem;font-size:13px;color:var(--green);text-align:center;line-height:1.6;}
+.budget-bar{background:var(--navy-light);border:1px solid var(--navy-border);border-radius:var(--radius-lg);padding:10px 16px;margin-bottom:1.25rem;font-size:13px;color:var(--navy);font-weight:600;display:flex;justify-content:space-between;align-items:center;}
+.budget-progress{height:8px;border-radius:999px;background:var(--border);margin-top:6px;overflow:hidden;}
+.budget-fill{height:100%;border-radius:999px;background:var(--green-mid);transition:width 0.3s;}
+.budget-fill.warning{background:var(--amber);}
+.budget-fill.danger{background:var(--coral);}
 .cat-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;}
 .cat-pill{padding:5px 13px;border-radius:999px;border:1px solid var(--navy-border);font-size:12px;cursor:pointer;color:var(--navy);background:transparent;transition:all 0.15s;white-space:nowrap;font-family:inherit;font-weight:500;}
 .cat-pill.active{background:var(--navy);color:white;border-color:var(--navy);font-weight:600;}
@@ -44,12 +49,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .item-card.oos{opacity:0.5;}
 .item-icon{font-size:28px;margin-bottom:8px;display:block;}
 .item-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
-.item-cat{font-size:11px;color:var(--text-3);margin-bottom:8px;}
+.item-cat{font-size:11px;color:var(--text-3);margin-bottom:4px;}
 .item-stock{font-size:11px;color:var(--text-3);}
 .item-stock.low{color:var(--amber);font-weight:600;}
 .item-stock.out{color:var(--coral);font-weight:600;}
 .add-btn{position:absolute;bottom:10px;right:10px;width:28px;height:28px;border-radius:50%;background:var(--green-light);border:1px solid var(--green-border);color:var(--green-mid);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;font-weight:600;}
 .add-btn:hover{background:var(--green-border);}
+.add-btn:disabled{opacity:0.4;cursor:not-allowed;}
 .in-cart-tag{position:absolute;top:8px;right:8px;background:var(--green-mid);color:white;border-radius:999px;font-size:10px;padding:2px 7px;font-weight:700;}
 .cart-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem;}
 .cart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
@@ -87,7 +93,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .fl .req{color:var(--coral);}
 .fi{width:100%;padding:9px 11px;border:1px solid var(--border-hover);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:inherit;}
 .fi:focus{outline:none;border-color:var(--navy);}
-.fi.error{border-color:var(--coral);}
 .modal-actions{display:flex;gap:8px;margin-top:1.25rem;}
 .btn-sec{flex:1;padding:10px;border:1px solid var(--border-hover);background:transparent;border-radius:var(--radius);font-size:13px;cursor:pointer;color:var(--text-2);font-family:inherit;}
 .btn-pri{flex:2;padding:10px;background:var(--navy);color:white;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
@@ -111,8 +116,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .as-btn{padding:4px 11px;border-radius:var(--radius);border:1px solid var(--green-border);background:var(--green-light);color:var(--green-mid);font-size:12px;cursor:pointer;font-weight:600;font-family:inherit;}
 .orders-list{display:flex;flex-direction:column;gap:10px;}
 .order-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;}
+.request-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;}
+.request-card.flagged{border-color:var(--amber);background:var(--amber-light);}
 .ostatus{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11px;font-weight:600;}
 .st-pending{background:var(--amber-light);color:var(--amber);}
+.st-approved{background:var(--green-light);color:var(--green-mid);}
+.st-denied{background:var(--coral-light);color:var(--coral);}
 .st-ready{background:var(--navy-light);color:var(--navy);}
 .st-done{background:var(--green-light);color:var(--green-mid);}
 .adv-btn{padding:4px 11px;border-radius:var(--radius);border:1px solid var(--navy-border);background:var(--navy-light);color:var(--navy);font-size:12px;cursor:pointer;margin-left:8px;font-weight:600;font-family:inherit;}
@@ -127,11 +136,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:white;border-radius:var(--radius-lg);padding:10px 18px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.2s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateY(0);}
 .privacy-note{font-size:11px;color:var(--text-3);text-align:center;margin-top:8px;line-height:1.5;}
+.checklist{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;}
+.checklist label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text);cursor:pointer;}
+.checklist input[type=checkbox]{width:15px;height:15px;cursor:pointer;}
+.token-card{background:var(--navy);color:white;border-radius:var(--radius-lg);padding:1.5rem;text-align:center;margin-top:1rem;}
+.token-code{font-size:28px;font-weight:700;letter-spacing:4px;margin:12px 0;font-family:monospace;}
+.token-amount{font-size:14px;opacity:0.8;margin-bottom:12px;}
+.print-card{background:white;border:2px solid var(--navy);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;margin-top:1rem;max-width:320px;margin-left:auto;margin-right:auto;}
+.print-btn{padding:8px 18px;border-radius:var(--radius);background:var(--green-mid);color:white;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:12px;}
+.access-screen{text-align:center;padding:3rem 1rem;max-width:500px;margin:0 auto;}
+.access-logo{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--navy);margin:0 auto 1rem;}
+.access-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.access-sub{font-size:14px;color:var(--text-2);margin-bottom:1.5rem;line-height:1.6;}
+.tab-row{display:flex;gap:8px;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem;}
+.admin-tab{padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border-hover);background:transparent;font-size:13px;cursor:pointer;color:var(--text-2);font-family:inherit;font-weight:500;}
+.admin-tab.active{background:var(--navy);color:white;border-color:var(--navy);font-weight:600;}
+.flag-badge{display:inline-block;background:var(--amber);color:white;border-radius:999px;font-size:10px;padding:2px 7px;font-weight:700;margin-left:6px;}
 @media(max-width:600px){
 .stats-row{grid-template-columns:repeat(2,1fr);}
 .settings-grid{grid-template-columns:1fr;}
 .items-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
 .header{flex-direction:column;align-items:flex-start;}
+.checklist{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -139,14 +165,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app">
 <div class="header">
 <div class="logo-wrap">
-<img class="logo-img" src="https://i.imgur.com/placeholder.png" id="logo-img" alt="The Supply Station" onerror="this.style.display='none'">
+<img class="logo-img" src="https://raw.githubusercontent.com/focap01/giving-closet/main/logo.png" alt="The Supply Station" onerror="this.style.display='none'">
 <div>
 <div class="app-title">The Supply Station</div>
 <div class="app-sub">Faith Outreach Church</div>
 <div class="app-tagline">Real Help. Real Hope.</div>
 </div>
 </div>
-<div class="nav-tabs">
+<div class="nav-tabs" id="nav-tabs">
 <button class="tab-btn active" id="tab-shop" onclick="showPage('shop')">Shop</button>
 <button class="tab-btn" id="tab-cart" onclick="showPage('cart')">Cart<span class="cart-dot" id="cart-dot">0</span></button>
 <button class="tab-btn" id="tab-admin" onclick="showPage('admin')">Admin</button>
@@ -154,14 +180,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <div class="page active" id="page-shop">
+<div id="access-gate">
+<div class="access-screen">
+<img class="access-logo" src="https://raw.githubusercontent.com/focap01/giving-closet/main/logo.png" alt="The Supply Station" onerror="this.style.display='none'">
+<div class="access-title">The Supply Station</div>
+<div class="access-sub">Welcome! To shop our free inventory you will need an access code provided by Faith Outreach Church.<br><br>Don't have one? Submit a request below and our team will review it and reach out to you.</div>
+<div class="fg" style="max-width:300px;margin:0 auto 12px;">
+<label class="fl">Enter your access code</label>
+<input class="fi" id="token-input" placeholder="e.g. ABC123" style="text-align:center;font-size:18px;font-weight:700;letter-spacing:4px;text-transform:uppercase;">
+</div>
+<button class="btn-pri" style="max-width:200px;display:block;margin:0 auto 1rem;" onclick="validateToken()">Enter</button>
+<div id="token-error" style="color:var(--coral);font-size:12px;margin-bottom:1rem;display:none;">Invalid or already used access code. Please contact the church.</div>
+<button class="btn-sec" style="max-width:200px;display:block;margin:0 auto;" onclick="showRequestForm()">Request access</button>
+</div>
+</div>
+<div id="shop-content" style="display:none;">
 <div class="welcome-banner">
-Welcome to The Supply Station! Browse our available items and request a free pickup.<br>
+Welcome to The Supply Station! Browse our available items below.<br>
 <strong>Supplies. Support. Prayer.</strong> — We'll pray with you.
 </div>
 <div class="pickup-banner" id="pickup-banner"></div>
+<div id="budget-display"></div>
 <div class="cat-bar" id="cat-bar"></div>
 <div id="shop-loading" class="loading-bar"><div class="spinner"></div><br>Loading inventory...</div>
 <div class="items-grid" id="items-grid" style="display:none;"></div>
+</div>
 </div>
 
 <div class="page" id="page-cart">
@@ -180,13 +223,40 @@ Welcome to The Supply Station! Browse our available items and request a free pic
 <div id="admin-lock" style="text-align:center;padding:4rem 1rem;">
 <div style="font-size:40px;margin-bottom:16px;">🔐</div>
 <div style="font-size:16px;font-weight:600;margin-bottom:8px;color:var(--navy);">Admin access</div>
-<div style="font-size:13px;color:var(--text-2);margin-bottom:1.5rem;">Enter the admin password to manage inventory and settings.</div>
+<div style="font-size:13px;color:var(--text-2);margin-bottom:1.5rem;">Enter the admin password to manage inventory, requests and tokens.</div>
 <input type="password" class="fi" id="pw-input" placeholder="Password" style="max-width:260px;margin:0 auto 12px;display:block;" onkeydown="if(event.key==='Enter')checkPw()">
 <button class="btn-pri" style="max-width:140px;display:block;margin:0 auto;" onclick="checkPw()">Enter</button>
 <div id="pw-err" style="color:var(--coral);font-size:12px;margin-top:8px;display:none;">Incorrect password.</div>
 </div>
 <div id="admin-panel" style="display:none;">
 <div class="stats-row" id="admin-stats"></div>
+<div class="tab-row">
+<button class="admin-tab active" onclick="showAdminTab('requests')">Requests <span id="pending-badge" class="flag-badge" style="display:none;">0</span></button>
+<button class="admin-tab" onclick="showAdminTab('inventory')">Inventory</button>
+<button class="admin-tab" onclick="showAdminTab('orders')">Pickup Orders</button>
+<button class="admin-tab" onclick="showAdminTab('settings')">Settings</button>
+</div>
+<div id="admin-requests" class="admin-tab-content">
+<div class="sec-hdr"><span class="sec-title">Family requests</span></div>
+<div id="requests-list"></div>
+</div>
+<div id="admin-inventory" class="admin-tab-content" style="display:none;">
+<div class="sec-hdr">
+<span class="sec-title">Inventory</span>
+<button class="add-item-btn" onclick="openModal('add-item-modal')">+ Add new item</button>
+</div>
+<div style="overflow-x:auto;">
+<table class="inv-table">
+<thead><tr><th style="width:30%">Item</th><th style="width:22%">Category</th><th style="width:10%">Stock</th><th style="width:10%">Value</th><th style="width:14%">Status</th><th style="width:14%">Add</th></tr></thead>
+<tbody id="inv-body"></tbody>
+</table>
+</div>
+</div>
+<div id="admin-orders" class="admin-tab-content" style="display:none;">
+<div class="sec-hdr"><span class="sec-title">Pickup orders</span></div>
+<div class="orders-list" id="orders-list"></div>
+</div>
+<div id="admin-settings" class="admin-tab-content" style="display:none;">
 <div class="sec-hdr" style="margin-bottom:0.75rem;"><span class="sec-title">Pickup settings</span></div>
 <div class="settings-card">
 <div class="settings-grid">
@@ -203,22 +273,45 @@ Welcome to The Supply Station! Browse our available items and request a free pic
 </div>
 <button class="edit-btn" onclick="openSettingsModal()">Edit pickup settings</button>
 </div>
-<div style="margin-bottom:2rem;">
-<div class="sec-hdr">
-<span class="sec-title">Inventory</span>
-<button class="add-item-btn" onclick="openModal('add-item-modal')">+ Add new item</button>
-</div>
-<div style="overflow-x:auto;">
-<table class="inv-table">
-<thead><tr><th style="width:36%">Item</th><th style="width:24%">Category</th><th style="width:12%">Stock</th><th style="width:14%">Status</th><th style="width:14%">Add</th></tr></thead>
-<tbody id="inv-body"></tbody>
-</table>
 </div>
 </div>
-<div>
-<div class="sec-hdr"><span class="sec-title">Pickup requests</span></div>
-<div class="orders-list" id="orders-list"></div>
 </div>
+
+<div class="modal-overlay" id="request-modal">
+<div class="modal">
+<div class="modal-title">Request Supply Station Access</div>
+<div class="fg"><label class="fl">Full name <span class="req">*</span></label><input class="fi" id="req-name" type="text" placeholder="First and last name"></div>
+<div class="fg"><label class="fl">Phone number <span class="req">*</span></label><input class="fi" id="req-phone" type="tel" placeholder="555-123-4567"></div>
+<div class="fg"><label class="fl">Email address <span class="req">*</span></label><input class="fi" id="req-email" type="email" placeholder="your@email.com"></div>
+<div class="fg"><label class="fl">Street address <span class="req">*</span></label><input class="fi" id="req-street" type="text" placeholder="123 Main Street"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;">
+<div><label class="fl">City <span class="req">*</span></label><input class="fi" id="req-city" type="text" placeholder="City"></div>
+<div><label class="fl">Zip <span class="req">*</span></label><input class="fi" id="req-zip" type="text" placeholder="12345"></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;">
+<div><label class="fl">Number of adults <span class="req">*</span></label><input class="fi" id="req-adults" type="number" min="1" placeholder="1"></div>
+<div><label class="fl">Number of children</label><input class="fi" id="req-numchildren" type="number" min="0" placeholder="0"></div>
+</div>
+<div class="fg"><label class="fl">Ages of children (if any)</label><input class="fi" id="req-childages" placeholder="e.g. 2, 5, 8"></div>
+<div class="fg">
+<label class="fl">What does your family need? <span class="req">*</span></label>
+<div class="checklist">
+<label><input type="checkbox" value="Food/Pantry items"> Food/Pantry items</label>
+<label><input type="checkbox" value="Bread/Bakery"> Bread/Bakery</label>
+<label><input type="checkbox" value="Cereal/Breakfast"> Cereal/Breakfast</label>
+<label><input type="checkbox" value="Canned Goods"> Canned Goods</label>
+<label><input type="checkbox" value="Hygiene Products"> Hygiene Products</label>
+<label><input type="checkbox" value="Cleaning Supplies"> Cleaning Supplies</label>
+<label><input type="checkbox" value="Diapers/Baby items"> Diapers/Baby items</label>
+<label><input type="checkbox" value="Home Goods"> Home Goods</label>
+<label><input type="checkbox" value="Other"> Other</label>
+</div>
+</div>
+<div class="fg"><label class="fl">Additional notes</label><textarea class="fi" id="req-notes" rows="3" placeholder="Anything else you would like us to know..."></textarea></div>
+<div class="privacy-note">Your information is used only for supply coordination and is never shared outside of Faith Outreach Church.</div>
+<div class="modal-actions">
+<button class="btn-sec" onclick="closeModal('request-modal')">Cancel</button>
+<button class="btn-pri" onclick="submitRequest()">Submit request</button>
 </div>
 </div>
 </div>
@@ -244,6 +337,39 @@ Welcome to The Supply Station! Browse our available items and request a free pic
 </div>
 </div>
 
+<div class="modal-overlay" id="token-modal">
+<div class="modal">
+<div class="modal-title">Generate access token</div>
+<div id="token-for-name" style="font-size:14px;color:var(--text-2);margin-bottom:1rem;"></div>
+<div class="fg"><label class="fl">Approved dollar amount <span class="req">*</span></label><input class="fi" id="token-amount" type="number" min="1" max="500" placeholder="e.g. 100"></div>
+<div class="modal-actions">
+<button class="btn-sec" onclick="closeModal('token-modal')">Cancel</button>
+<button class="btn-pri" onclick="generateToken()">Generate token</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="print-modal">
+<div class="modal" style="max-width:380px;">
+<div class="modal-title">Access card ready</div>
+<div class="print-card" id="print-card">
+<img src="https://raw.githubusercontent.com/focap01/giving-closet/main/logo.png" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--navy);margin-bottom:12px;" onerror="this.style.display='none'">
+<div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">The Supply Station</div>
+<div style="font-size:12px;color:var(--text-3);margin-bottom:16px;">Faith Outreach Church</div>
+<div style="font-size:12px;color:var(--text-2);margin-bottom:8px;font-style:italic;">"Visit The Supply Station and let us bless you today."</div>
+<div style="font-size:11px;color:var(--text-3);margin-bottom:8px;">Your access code:</div>
+<div class="token-code" id="print-token-code" style="color:var(--navy);background:var(--navy-light);padding:8px 16px;border-radius:var(--radius);display:inline-block;"></div>
+<div id="print-token-amount" style="font-size:12px;color:var(--text-2);margin-top:8px;"></div>
+<div id="qr-code-display" style="margin:12px auto;"></div>
+<div style="font-size:11px;color:var(--text-3);margin-top:8px;">Scan QR code or visit:<br>focap01.github.io/giving-closet</div>
+</div>
+<div class="modal-actions">
+<button class="btn-sec" onclick="closeModal('print-modal')">Close</button>
+<button class="print-btn" onclick="window.print()">Print card</button>
+</div>
+</div>
+</div>
+
 <div class="modal-overlay" id="add-item-modal">
 <div class="modal">
 <div class="modal-title">Add new item</div>
@@ -263,6 +389,7 @@ Welcome to The Supply Station! Browse our available items and request a free pic
 </div>
 <div class="fg"><label class="fl">Icon (emoji)</label><input class="fi" id="ni-icon" placeholder="📦" maxlength="4"></div>
 <div class="fg"><label class="fl">Starting quantity</label><input class="fi" id="ni-qty" type="number" min="0" value="10"></div>
+<div class="fg"><label class="fl">Estimated value ($)</label><input class="fi" id="ni-value" type="number" min="0" step="0.50" value="2"></div>
 <div class="modal-actions">
 <button class="btn-sec" onclick="closeModal('add-item-modal')">Cancel</button>
 <button class="btn-pri" onclick="submitAddItem()">Add item</button>
@@ -296,22 +423,24 @@ Welcome to The Supply Station! Browse our available items and request a free pic
 
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 var SURL = "https://cvfgtijbbotpmkjggebv.supabase.co";
 var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2Zmd0aWpiYm90cG1ramdnZWJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDg1OTgsImV4cCI6MjA5MTAyNDU5OH0.0MUWJs5Bh9C021U1p1BAbrAROEpzU2lYxHoSmsEeNYc";
 var EJS_SERVICE = "service_2ep9jbh";
 var EJS_TEMPLATE = "template_tcdbeds";
+var EJS_TEMPLATE_REQUEST = "template_tcdbeds";
 var EJS_KEY = "32rnTvuKEeetIvjkR";
 var ADMIN_PW = "church2024";
 var CATS = ["All","Canned Goods","Dry Goods","Bread & Bakery","Cereal & Breakfast","Home Goods","Cleaning Supplies","Hygiene Products","Diapers & Wipes","Other Non-Perishables"];
+var APP_URL = "https://focap01.github.io/giving-closet/";
 
 emailjs.init(EJS_KEY);
 
-var LOGO_URL = "https://raw.githubusercontent.com/focap01/giving-closet/main/logo.png";
-document.getElementById("logo-img").src = LOGO_URL;
-
-var inventory=[], orders=[], settings={location:"Faith Outreach Church",days:["Monday","Wednesday","Friday"],hours:"10:00 AM - 2:00 PM"};
+var inventory=[], orders=[], requests=[], settings={location:"Faith Outreach Church",days:["Monday","Wednesday","Friday"],hours:"10:00 AM - 2:00 PM"};
 var cart={}, activeCat="All", addStockTargetId=null, adminUnlocked=false;
+var currentToken=null, tokenBudget=0, cartTotal=0;
+var tokenRequestId=null;
 
 function dbCall(path, method, body, callback) {
   var xhr = new XMLHttpRequest();
@@ -333,11 +462,14 @@ function dbCall(path, method, body, callback) {
 }
 
 function init() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var urlToken = urlParams.get("token");
+  if(urlToken) {
+    document.getElementById("token-input").value = urlToken.toUpperCase();
+    validateToken();
+  }
   dbCall("inventory?order=id", "GET", null, function(err, inv) {
-    if(err) {
-      document.getElementById("shop-loading").innerHTML = "<div style='color:#993C1D;'>Could not connect. <button onclick='init()' style='margin-left:8px;padding:4px 10px;cursor:pointer;border:1px solid #ccc;border-radius:4px;background:white;'>Retry</button></div>";
-      return;
-    }
+    if(err) { document.getElementById("shop-loading").innerHTML = "<div style='color:#993C1D;'>Could not connect. <button onclick='init()' style='margin-left:8px;padding:4px 10px;cursor:pointer;border:1px solid #ccc;border-radius:4px;background:white;'>Retry</button></div>"; return; }
     inventory = inv;
     dbCall("orders?order=id", "GET", null, function(err2, ord) {
       orders = ord || [];
@@ -359,18 +491,55 @@ function startPolling() {
   setInterval(function() {
     dbCall("inventory?order=id", "GET", null, function(err, inv) {
       if(!err && JSON.stringify(inv) !== JSON.stringify(inventory)) {
-        inventory = inv;
-        renderShop();
-        if(adminUnlocked) renderAdmin();
+        inventory = inv; renderShop();
+        if(adminUnlocked) renderAdminInventory();
       }
     });
     dbCall("orders?order=id", "GET", null, function(err, ord) {
       if(!err && JSON.stringify(ord) !== JSON.stringify(orders)) {
         orders = ord;
-        if(adminUnlocked) renderAdmin();
+        if(adminUnlocked) renderAdminOrders();
       }
     });
+    if(adminUnlocked) {
+      dbCall("requests?order=id", "GET", null, function(err, reqs) {
+        if(!err && JSON.stringify(reqs) !== JSON.stringify(requests)) {
+          requests = reqs; renderAdminRequests();
+        }
+      });
+    }
   }, 15000);
+}
+
+function validateToken() {
+  var code = document.getElementById("token-input").value.trim().toUpperCase();
+  if(!code) { toast("Please enter your access code"); return; }
+  dbCall("requests?token=eq."+code+"&token_used=eq.false&status=eq.approved", "GET", null, function(err, result) {
+    if(err || !result || !result.length) {
+      document.getElementById("token-error").style.display = "block";
+      return;
+    }
+    var req = result[0];
+    currentToken = code;
+    tokenBudget = req.token_amount;
+    cartTotal = 0;
+    document.getElementById("token-error").style.display = "none";
+    document.getElementById("access-gate").style.display = "none";
+    document.getElementById("shop-content").style.display = "block";
+    updateBudgetDisplay();
+    toast("Welcome! You have $"+tokenBudget+" to spend.");
+  });
+}
+
+function updateBudgetDisplay() {
+  var remaining = tokenBudget - cartTotal;
+  var pct = Math.min(100, Math.round((cartTotal/tokenBudget)*100));
+  var fillClass = pct >= 90 ? "danger" : pct >= 70 ? "warning" : "";
+  document.getElementById("budget-display").innerHTML =
+    "<div class='budget-bar'>" +
+    "<div><span>Budget: $"+tokenBudget+"</span> &nbsp;·&nbsp; <span>Used: $"+cartTotal.toFixed(2)+"</span> &nbsp;·&nbsp; <span style='color:var(--green-mid);font-weight:700;'>Remaining: $"+remaining.toFixed(2)+"</span></div>" +
+    "<div class='budget-progress'><div class='budget-fill "+fillClass+"' style='width:"+pct+"%;'></div></div>" +
+    "</div>";
 }
 
 function generateSlots(h) {
@@ -389,27 +558,21 @@ function ft(m) {
   if(h===0) h=12; else if(h>12) h-=12;
   return h+":"+(mn<10?"0":"")+mn+" "+ap;
 }
-
 function populatePickupSelects() {
   var d = document.getElementById("co-day");
   d.innerHTML = "<option value=''>Choose a day...</option>";
   for(var i=0;i<settings.days.length;i++) {
     var o = document.createElement("option");
-    o.value = settings.days[i];
-    o.textContent = settings.days[i];
-    d.appendChild(o);
+    o.value = settings.days[i]; o.textContent = settings.days[i]; d.appendChild(o);
   }
   var t = document.getElementById("co-time");
   t.innerHTML = "<option value=''>Choose a slot...</option>";
   var slots = generateSlots(settings.hours || "10:00 AM - 2:00 PM");
   for(var j=0;j<slots.length;j++) {
     var o2 = document.createElement("option");
-    o2.value = slots[j];
-    o2.textContent = slots[j];
-    t.appendChild(o2);
+    o2.value = slots[j]; o2.textContent = slots[j]; t.appendChild(o2);
   }
 }
-
 function updateBanner() {
   var loc = (settings.location || "").split("\n")[0];
   document.getElementById("pickup-banner").innerHTML = "📍 " + loc + "  ·  " + settings.days.join(", ") + "  ·  " + settings.hours;
@@ -424,6 +587,19 @@ function showPage(p) {
   document.getElementById("tab-"+p).classList.add("active");
   if(p==="admin" && adminUnlocked) renderAdmin();
   if(p==="cart") renderCart();
+}
+
+function showAdminTab(tab) {
+  var tabs = document.querySelectorAll(".admin-tab");
+  for(var i=0;i<tabs.length;i++) tabs[i].classList.remove("active");
+  event.target.classList.add("active");
+  var contents = document.querySelectorAll(".admin-tab-content");
+  for(var j=0;j<contents.length;j++) contents[j].style.display="none";
+  document.getElementById("admin-"+tab).style.display="block";
+}
+
+function showRequestForm() {
+  openModal("request-modal");
 }
 
 function renderShop() {
@@ -445,6 +621,9 @@ function renderShop() {
     var qty = cart[item.id] || 0;
     var out = item.stock <= 0;
     var low = item.stock > 0 && item.stock <= 3;
+    var itemVal = parseFloat(item.value) || 1;
+    var remaining = tokenBudget - cartTotal;
+    var canAdd = !out && itemVal <= remaining + (qty * itemVal);
     var card = document.createElement("div");
     card.className = "item-card" + (out ? " oos" : "");
     var stockText = out ? "Out of stock" : (low ? "Only "+item.stock+" left" : item.stock+" available");
@@ -459,14 +638,19 @@ function renderShop() {
       addBtn.className = "add-btn";
       addBtn.textContent = "+";
       addBtn.setAttribute("data-id", item.id);
+      if(!canAdd && qty===0) addBtn.disabled = true;
       addBtn.onclick = function(e) { e.stopPropagation(); addToCart(parseInt(this.getAttribute("data-id"))); };
       card.appendChild(addBtn);
     }
     grid.appendChild(card);
   }
 }
-
 function setCat(c) { activeCat = c; renderShop(); }
+
+function getItemValue(id) {
+  for(var i=0;i<inventory.length;i++) if(inventory[i].id===id) return parseFloat(inventory[i].value)||1;
+  return 1;
+}
 
 function addToCart(id) {
   var item = null;
@@ -474,9 +658,11 @@ function addToCart(id) {
   if(!item) return;
   var cur = cart[id] || 0;
   if(cur >= item.stock) { toast("No more available!"); return; }
+  var itemVal = parseFloat(item.value) || 1;
+  if(cartTotal + itemVal > tokenBudget) { toast("Adding this would exceed your $"+tokenBudget+" budget!"); return; }
   cart[id] = cur + 1;
-  updateCartDot();
-  renderShop();
+  cartTotal += itemVal;
+  updateCartDot(); renderShop(); updateBudgetDisplay();
   toast(item.icon + " " + item.name + " added");
 }
 
@@ -484,8 +670,7 @@ function updateCartDot() {
   var total = 0;
   for(var k in cart) total += cart[k];
   var dot = document.getElementById("cart-dot");
-  dot.textContent = total;
-  dot.style.display = total > 0 ? "flex" : "none";
+  dot.textContent = total; dot.style.display = total > 0 ? "flex" : "none";
 }
 
 function renderCart() {
@@ -512,13 +697,73 @@ function changeQty(id,d) {
   for(var i=0;i<inventory.length;i++) if(inventory[i].id===id) { item=inventory[i]; break; }
   var nv = (cart[id]||0) + d;
   if(nv > item.stock) { toast("No more available!"); return; }
-  if(nv <= 0) delete cart[id]; else cart[id] = nv;
-  updateCartDot(); renderCart();
+  var itemVal = parseFloat(item.value) || 1;
+  if(d > 0 && cartTotal + itemVal > tokenBudget) { toast("Adding this would exceed your $"+tokenBudget+" budget!"); return; }
+  if(nv <= 0) { cartTotal -= itemVal * (cart[id]||0); delete cart[id]; }
+  else { cartTotal += itemVal * d; cart[id] = nv; }
+  updateCartDot(); renderCart(); updateBudgetDisplay();
 }
-function rmItem(id) { delete cart[id]; updateCartDot(); renderCart(); }
-function clearCart() { cart={}; updateCartDot(); renderCart(); }
+function rmItem(id) {
+  var itemVal = getItemValue(id);
+  cartTotal -= itemVal * (cart[id]||0);
+  if(cartTotal < 0) cartTotal = 0;
+  delete cart[id]; updateCartDot(); renderCart(); updateBudgetDisplay();
+}
+function clearCart() {
+  cart={}; cartTotal=0; updateCartDot(); renderCart(); updateBudgetDisplay();
+}
 function openModal(id) { document.getElementById(id).classList.add("open"); }
 function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+function submitRequest() {
+  var name = document.getElementById("req-name").value.trim();
+  var phone = document.getElementById("req-phone").value.trim();
+  var email = document.getElementById("req-email").value.trim();
+  var street = document.getElementById("req-street").value.trim();
+  var city = document.getElementById("req-city").value.trim();
+  var zip = document.getElementById("req-zip").value.trim();
+  var adults = document.getElementById("req-adults").value.trim();
+  var numchildren = document.getElementById("req-numchildren").value.trim();
+  var childages = document.getElementById("req-childages").value.trim();
+  var notes = document.getElementById("req-notes").value.trim();
+
+  if(!name||!phone||!email||!street||!city||!zip||!adults) { toast("Please fill in all required fields"); return; }
+
+  var checked = document.querySelectorAll("#request-modal input[type=checkbox]:checked");
+  if(!checked.length) { toast("Please select at least one item need"); return; }
+  var needs = [];
+  for(var i=0;i<checked.length;i++) needs.push(checked[i].value);
+
+  var address = street + ", " + city + " " + zip;
+  var reqData = {
+    id: Date.now(),
+    name: name, phone: phone, email: email,
+    address: address, adults: parseInt(adults)||1,
+    num_children: parseInt(numchildren)||0,
+    child_ages: childages, needs: needs.join(", "),
+    notes: notes, status: "pending",
+    token: null, token_amount: null, token_used: false,
+    ts: new Date().toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})
+  };
+
+  dbCall("requests","POST",reqData,function(err) {
+    if(err) { toast("Error submitting request. Please try again."); return; }
+    emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+      name: name, phone: phone, email: email,
+      address: address,
+      day: "Household: "+adults+" adults, "+numchildren+" children"+(childages?" (ages: "+childages+")":""),
+      time: "Needs: "+needs.join(", "),
+      items: notes || "No additional notes"
+    });
+    closeModal("request-modal");
+    document.getElementById("access-gate").innerHTML =
+      "<div class='access-screen'>" +
+      "<span style='font-size:48px;display:block;margin-bottom:16px;'>✅</span>" +
+      "<div class='access-title' style='color:var(--green-mid);'>Request submitted!</div>" +
+      "<div class='access-sub'>Thank you, "+name+"! Our team will review your request and reach out to you soon with your access code.<br><br>God bless you!</div>" +
+      "</div>";
+    toast("Request submitted successfully!");
+  });
+}
 
 function submitCheckout() {
   var name = document.getElementById("co-name").value.trim();
@@ -533,7 +778,7 @@ function submitCheckout() {
   if(!name) { toast("Please enter your name"); return; }
   if(!phone) { toast("Please enter your phone number"); return; }
   if(!email) { toast("Please enter your email address"); return; }
-  if(!street || !city || !zip) { toast("Please enter your full address"); return; }
+  if(!street||!city||!zip) { toast("Please enter your full address"); return; }
   if(!day||!time) { toast("Please choose a pickup day and time"); return; }
 
   var address = street + ", " + city + " " + zip;
@@ -546,7 +791,7 @@ function submitCheckout() {
     for(var j=0;j<inventory.length;j++) if(inventory[j].id==keys[i]) { item=inventory[j]; break; }
     if(item) {
       items.push({id:parseInt(keys[i]),qty:cart[keys[i]],name:item.name,icon:item.icon});
-      itemsText += item.icon + " " + item.name + " x" + cart[keys[i]] + "\n";
+      itemsText += item.icon+" "+item.name+" x"+cart[keys[i]]+"\n";
     }
   }
 
@@ -557,41 +802,35 @@ function submitCheckout() {
     if(pending > 0) return;
     if(errors > 0) { toast("Error saving. Please try again."); return; }
     var order = {
-      id: Date.now(),
-      name: name,
-      contact: phone + " | " + email,
-      day: day,
-      time_slot: time,
-      items: items,
+      id: Date.now(), name: name,
+      contact: phone+" | "+email,
+      day: day, time_slot: time, items: items,
       status: "pending",
       ts: new Date().toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})
     };
     dbCall("orders","POST",order,function(err) {
       if(err) { toast("Error saving order."); return; }
-
+      if(currentToken) {
+        dbCall("requests?token=eq."+currentToken,"PATCH",{token_used:true},function(){});
+      }
       emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
-        name: name,
-        phone: phone,
-        email: email,
-        address: address,
-        day: day,
-        time: time,
-        items: itemsText
-      }).then(function() {
-        console.log("Email sent!");
-      }, function(error) {
-        console.log("Email error:", error);
+        name:name, phone:phone, email:email, address:address,
+        day:day, time:time, items:itemsText
       });
-
       closeModal("co-modal");
-      document.getElementById("conf-area").innerHTML = "<div class='conf-box'><span class='conf-icon'>✅</span><div class='conf-title'>You are all set, "+name+"!</div><div class='conf-sub'>Your items will be held for pickup. Everything is completely free.</div><div class='conf-pickup'>📍 "+settings.location+"<br>📅 "+day+" - "+time+"</div><div class='conf-note'>Please show this confirmation when you arrive.</div><div class='conf-prayer'>We will pray with you. God bless you!</div></div>";
+      document.getElementById("conf-area").innerHTML =
+        "<div class='conf-box'><span class='conf-icon'>✅</span>" +
+        "<div class='conf-title'>You are all set, "+name+"!</div>" +
+        "<div class='conf-sub'>Your items will be held for pickup. Everything is completely free.</div>" +
+        "<div class='conf-pickup'>📍 "+settings.location+"<br>📅 "+day+" - "+time+"</div>" +
+        "<div class='conf-note'>Please show this confirmation when you arrive.</div>" +
+        "<div class='conf-prayer'>We will pray with you. God bless you!</div></div>";
       document.getElementById("cart-body").innerHTML = "<div class='empty-msg'>Pickup confirmed!</div>";
       document.getElementById("co-btn").disabled = true;
-      cart = {}; updateCartDot(); toast("Pickup scheduled!");
+      cart={}; cartTotal=0; updateCartDot(); toast("Pickup scheduled!");
       dbCall("inventory?order=id","GET",null,function(err,inv){ if(!err){ inventory=inv; renderShop(); } });
     });
   }
-
   for(var x=0;x<keys.length;x++) {
     var inv_item = null;
     for(var y=0;y<inventory.length;y++) if(inventory[y].id==keys[x]) { inv_item=inventory[y]; break; }
@@ -607,30 +846,92 @@ function checkPw() {
     document.getElementById("admin-lock").style.display = "none";
     document.getElementById("admin-panel").style.display = "block";
     renderAdmin();
-  } else {
-    document.getElementById("pw-err").style.display = "block";
-  }
+  } else { document.getElementById("pw-err").style.display = "block"; }
 }
 
 function renderAdmin() {
+  dbCall("requests?order=id", "GET", null, function(err, reqs) {
+    requests = reqs || [];
+    renderAdminStats();
+    renderAdminRequests();
+    renderAdminInventory();
+    renderAdminOrders();
+    renderAdminSettings();
+  });
+}
+
+function renderAdminStats() {
   var total=0,low=0,out=0,pending=0;
   for(var i=0;i<inventory.length;i++) { total+=inventory[i].stock; if(inventory[i].stock<=0) out++; else if(inventory[i].stock<=3) low++; }
   for(var j=0;j<orders.length;j++) if(orders[j].status!=="done") pending++;
-  document.getElementById("admin-stats").innerHTML = "<div class='stat-card'><div class='stat-label'>Item types</div><div class='stat-val'>"+inventory.length+"</div></div><div class='stat-card'><div class='stat-label'>Total units</div><div class='stat-val'>"+total+"</div></div><div class='stat-card'><div class='stat-label'>Low / out</div><div class='stat-val' style='color:var(--amber)'>"+(low+out)+"</div></div><div class='stat-card'><div class='stat-label'>Open orders</div><div class='stat-val' style='color:var(--navy)'>"+pending+"</div></div>";
-  document.getElementById("disp-location").innerHTML = settings.location;
-  document.getElementById("disp-days").textContent = settings.days.join(", ");
-  document.getElementById("disp-hours").textContent = settings.hours;
+  var pendingReqs = 0;
+  for(var k=0;k<requests.length;k++) if(requests[k].status==="pending") pendingReqs++;
+  document.getElementById("admin-stats").innerHTML =
+    "<div class='stat-card'><div class='stat-label'>Item types</div><div class='stat-val'>"+inventory.length+"</div></div>" +
+    "<div class='stat-card'><div class='stat-label'>Total units</div><div class='stat-val'>"+total+"</div></div>" +
+    "<div class='stat-card'><div class='stat-label'>Pending requests</div><div class='stat-val' style='color:var(--amber)'>"+pendingReqs+"</div></div>" +
+    "<div class='stat-card'><div class='stat-label'>Open orders</div><div class='stat-val' style='color:var(--navy)'>"+pending+"</div></div>";
+  var badge = document.getElementById("pending-badge");
+  if(pendingReqs > 0) { badge.textContent = pendingReqs; badge.style.display="inline-block"; }
+  else badge.style.display="none";
+}
+
+function renderAdminRequests() {
+  var list = document.getElementById("requests-list");
+  if(!requests.length) { list.innerHTML="<div style='color:var(--text-2);font-size:13px;padding:1rem 0;'>No requests yet.</div>"; return; }
+  var html = "";
+  var rev = requests.slice().reverse();
+  for(var i=0;i<rev.length;i++) {
+    var r = rev[i];
+    var sc = r.status==="approved"?"st-approved":r.status==="denied"?"st-denied":"st-pending";
+    var flagHtml = "";
+    var dupCheck = false;
+    for(var j=0;j<requests.length;j++) {
+      if(requests[j].id !== r.id && (requests[j].phone===r.phone || requests[j].address===r.address)) {
+        dupCheck = true; break;
+      }
+    }
+    if(dupCheck) flagHtml = "<span class='flag-badge'>Possible duplicate</span>";
+    html += "<div class='request-card"+(dupCheck?" flagged":"")+"'>" +
+      "<div style='display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;margin-bottom:8px;'>" +
+      "<span style='font-size:14px;font-weight:700;color:var(--text);'>"+r.name+"</span>" +
+      "<span style='font-size:11px;color:var(--text-3);'>"+r.ts+"</span></div>" +
+      flagHtml +
+      "<div style='font-size:12px;color:var(--text-2);margin-bottom:4px;'>📞 "+r.phone+" | ✉️ "+r.email+"</div>" +
+      "<div style='font-size:12px;color:var(--text-2);margin-bottom:4px;'>📍 "+r.address+"</div>" +
+      "<div style='font-size:12px;color:var(--text-2);margin-bottom:4px;'>👥 "+r.adults+" adults, "+r.num_children+" children"+(r.child_ages?" (ages: "+r.child_ages+")":"")+"</div>" +
+      "<div style='font-size:12px;color:var(--text-2);margin-bottom:4px;'>🛒 Needs: "+r.needs+"</div>" +
+      (r.notes?"<div style='font-size:12px;color:var(--text-2);margin-bottom:8px;'>📝 "+r.notes+"</div>":"") +
+      "<div style='margin-top:8px;'><span class='ostatus "+sc+"'>"+r.status.charAt(0).toUpperCase()+r.status.slice(1)+"</span>" +
+      (r.token?"<span style='font-size:11px;color:var(--text-3);margin-left:8px;'>Token: "+r.token+(r.token_used?" (used)":"")+"</span>":"") +
+      "</div>" +
+      (r.status==="pending"?
+        "<div style='margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;'>" +
+        "<button class='adv-btn' onclick='openTokenModal("+r.id+",\""+r.name+"\")'>Approve &amp; generate token</button>" +
+        "<button class='adv-btn' style='border-color:var(--coral-light);background:var(--coral-light);color:var(--coral);' onclick='denyRequest("+r.id+")'>Deny</button>" +
+        "</div>" : "") +
+      (r.status==="approved"&&r.token&&!r.token_used?
+        "<div style='margin-top:8px;'><button class='adv-btn' onclick='showPrintCard(\""+r.token+"\","+r.token_amount+")'>Print card</button></div>":"") +
+      "</div>";
+  }
+  list.innerHTML = html;
+}
+
+function renderAdminInventory() {
   var sorted = inventory.slice().sort(function(a,b){return a.stock-b.stock;});
   var rows = "";
   for(var k=0;k<sorted.length;k++) {
     var item=sorted[k];
     var cls=item.stock<=0?"s-out":item.stock<=3?"s-low":"s-ok";
     var lbl=item.stock<=0?"Out":item.stock<=3?"Low":"OK";
-    rows += "<tr><td>"+item.icon+" "+item.name+"</td><td style='color:var(--text-2)'>"+item.cat+"</td><td style='font-weight:700'>"+item.stock+"</td><td><span class='sbadge "+cls+"'>"+lbl+"</span></td><td><button class='as-btn' onclick='openAddStock("+item.id+")'>+ Add</button></td></tr>";
+    rows += "<tr><td>"+item.icon+" "+item.name+"</td><td style='color:var(--text-2)'>"+item.cat+"</td><td style='font-weight:700'>"+item.stock+"</td><td>$"+(parseFloat(item.value)||1).toFixed(2)+"</td><td><span class='sbadge "+cls+"'>"+lbl+"</span></td><td><button class='as-btn' onclick='openAddStock("+item.id+")'>+ Add</button></td></tr>";
   }
   document.getElementById("inv-body").innerHTML = rows;
+}
+
+function renderAdminOrders() {
   var ol = document.getElementById("orders-list");
-  if(!orders.length) { ol.innerHTML="<div style='color:var(--text-2);font-size:13px;padding:1rem 0;'>No pickup requests yet.</div>"; return; }
+  if(!orders.length) { ol.innerHTML="<div style='color:var(--text-2);font-size:13px;padding:1rem 0;'>No pickup orders yet.</div>"; return; }
   var ohtml = "";
   var rev = orders.slice().reverse();
   for(var m=0;m<rev.length;m++) {
@@ -639,16 +940,79 @@ function renderAdmin() {
     for(var n=0;n<o.items.length;n++) ilist+=(n>0?", ":"")+o.items[n].icon+" "+o.items[n].name+" x"+o.items[n].qty;
     var sc=o.status==="done"?"st-done":o.status==="ready"?"st-ready":"st-pending";
     var sl=o.status==="done"?"Picked up":o.status==="ready"?"Ready for pickup":"Pending";
-    ohtml += "<div class='order-card'><div style='display:flex;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:4px;'><span style='font-size:14px;font-weight:600;color:var(--text);'>"+o.name+"</span><span style='font-size:11px;color:var(--text-3);'>"+o.day+" - "+(o.time_slot||"")+" - "+o.ts+"</span></div><div style='font-size:12px;color:var(--text-3);margin-bottom:6px;'>"+o.contact+"</div><div style='font-size:13px;color:var(--text-2);margin-bottom:8px;line-height:1.6;'>"+ilist+"</div><span class='ostatus "+sc+"'>"+sl+"</span>"+(o.status!=="done"?"<button class='adv-btn' onclick='advOrder("+o.id+")'>"+(o.status==="pending"?"Mark ready":"Mark picked up")+"</button>":"")+"</div>";
+    ohtml += "<div class='order-card'>" +
+      "<div style='display:flex;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:4px;'><span style='font-size:14px;font-weight:600;color:var(--text);'>"+o.name+"</span><span style='font-size:11px;color:var(--text-3);'>"+o.day+" - "+(o.time_slot||"")+" - "+o.ts+"</span></div>" +
+      "<div style='font-size:12px;color:var(--text-3);margin-bottom:6px;'>"+o.contact+"</div>" +
+      "<div style='font-size:13px;color:var(--text-2);margin-bottom:8px;line-height:1.6;'>"+ilist+"</div>" +
+      "<span class='ostatus "+sc+"'>"+sl+"</span>" +
+      (o.status!=="done"?"<button class='adv-btn' onclick='advOrder("+o.id+")'>"+(o.status==="pending"?"Mark ready":"Mark picked up")+"</button>":"") +
+      "</div>";
   }
   ol.innerHTML = ohtml;
+}
+
+function renderAdminSettings() {
+  document.getElementById("disp-location").innerHTML = settings.location;
+  document.getElementById("disp-days").textContent = settings.days.join(", ");
+  document.getElementById("disp-hours").textContent = settings.hours;
+}
+
+function openTokenModal(reqId, reqName) {
+  tokenRequestId = reqId;
+  document.getElementById("token-for-name").textContent = "Family: " + reqName;
+  document.getElementById("token-amount").value = "100";
+  openModal("token-modal");
+}
+
+function generateToken() {
+  var amount = parseInt(document.getElementById("token-amount").value)||0;
+  if(amount <= 0) { toast("Enter a valid dollar amount"); return; }
+  var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  var code = "";
+  for(var i=0;i<6;i++) code += chars.charAt(Math.floor(Math.random()*chars.length));
+  dbCall("requests?id=eq."+tokenRequestId,"PATCH",{status:"approved",token:code,token_amount:amount},function(err) {
+    if(err) { toast("Error generating token."); return; }
+    for(var i=0;i<requests.length;i++) {
+      if(requests[i].id===tokenRequestId) {
+        requests[i].status="approved"; requests[i].token=code; requests[i].token_amount=amount; break;
+      }
+    }
+    closeModal("token-modal");
+    renderAdminRequests();
+    renderAdminStats();
+    showPrintCard(code, amount);
+  });
+}
+
+function denyRequest(reqId) {
+  dbCall("requests?id=eq."+reqId,"PATCH",{status:"denied"},function(err) {
+    if(err) { toast("Error updating request."); return; }
+    for(var i=0;i<requests.length;i++) {
+      if(requests[i].id===reqId) { requests[i].status="denied"; break; }
+    }
+    renderAdminRequests(); renderAdminStats();
+    toast("Request denied.");
+  });
+}
+
+function showPrintCard(code, amount) {
+  document.getElementById("print-token-code").textContent = code;
+  document.getElementById("print-token-amount").textContent = "Approved amount: $" + amount;
+  var qrDiv = document.getElementById("qr-code-display");
+  qrDiv.innerHTML = "";
+  new QRCode(qrDiv, {
+    text: APP_URL + "?token=" + code,
+    width: 120, height: 120,
+    colorDark: "#1a2744", colorLight: "#ffffff"
+  });
+  openModal("print-modal");
 }
 
 function advOrder(id) {
   var o=null;
   for(var i=0;i<orders.length;i++) if(orders[i].id===id){o=orders[i];break;}
   var s = o.status==="pending"?"ready":"done";
-  dbCall("orders?id=eq."+id,"PATCH",{status:s},function(err){ if(!err){o.status=s;renderAdmin();}else{toast("Error updating order.");} });
+  dbCall("orders?id=eq."+id,"PATCH",{status:s},function(err){ if(!err){o.status=s;renderAdminOrders();}else{toast("Error updating order.");} });
 }
 
 function openAddStock(id) {
@@ -667,7 +1031,7 @@ function submitAddStock() {
   for(var i=0;i<inventory.length;i++) if(inventory[i].id===addStockTargetId){item=inventory[i];break;}
   dbCall("inventory?id=eq."+item.id,"PATCH",{stock:item.stock+qty},function(err){
     if(err){toast("Error updating stock.");return;}
-    item.stock+=qty; closeModal("add-stock-modal"); renderAdmin(); renderShop();
+    item.stock+=qty; closeModal("add-stock-modal"); renderAdminInventory(); renderShop();
     toast("Added "+qty+" x "+item.name);
   });
 }
@@ -677,11 +1041,12 @@ function submitAddItem() {
   var cat=document.getElementById("ni-cat").value;
   var icon=document.getElementById("ni-icon").value.trim()||"📦";
   var qty=parseInt(document.getElementById("ni-qty").value)||0;
+  var val=parseFloat(document.getElementById("ni-value").value)||1;
   if(!name){toast("Enter an item name");return;}
-  dbCall("inventory","POST",{name:name,cat:cat,icon:icon,stock:qty},function(err,r){
+  dbCall("inventory","POST",{name:name,cat:cat,icon:icon,stock:qty,value:val},function(err,r){
     if(err){toast("Error adding item.");return;}
     if(r&&r.length) inventory.push(r[0]);
-    closeModal("add-item-modal"); renderAdmin(); renderShop();
+    closeModal("add-item-modal"); renderAdminInventory(); renderShop();
     toast(icon+" "+name+" added");
   });
 }
@@ -704,7 +1069,7 @@ function saveSettings() {
     if(err){toast("Error saving settings.");return;}
     settings={location:loc,days:days,hours:hrs};
     populatePickupSelects(); updateBanner();
-    closeModal("settings-modal"); renderAdmin();
+    closeModal("settings-modal"); renderAdminSettings();
     toast("Settings saved");
   });
 }
