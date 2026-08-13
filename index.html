@@ -2,8 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>The Supply Station</title>
+<meta name="description" content="Faith Outreach Church - request supplies, browse inventory, and pick up your order.">
+
+<!-- Installable app: Safari > Share > Add to Home Screen puts this on the iPad
+     home screen and launches it fullscreen, with no browser bars. -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Supply Station">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f7f4;color:#1a1a18;min-height:100vh;}
@@ -18,7 +30,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 --text:#1a1a18;--text-2:#5f5e5a;--text-3:#888780;
 --radius:8px;--radius-lg:12px;
 }
-.app{max-width:900px;margin:0 auto;padding:0 1rem 3rem;}
+/* Insets keep content clear of the rounded corners and home indicator when
+   launched fullscreen from the home screen. They resolve to 0 in a browser. */
+.app{max-width:900px;margin:0 auto;padding:0 max(1rem,env(safe-area-inset-right)) calc(3rem + env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));}
 .header{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:2px solid var(--navy);margin-bottom:1.5rem;flex-wrap:wrap;gap:12px;background:white;}
 .logo-wrap{display:flex;align-items:center;gap:12px;}
 .logo-img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--navy);}
@@ -165,7 +179,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app">
 <div class="header">
 <div class="logo-wrap">
-<img class="logo-img" src="https://raw.githubusercontent.com/focap01/giving-closet/main/logo.png" alt="The Supply Station" onerror="this.style.display='none'">
+<img class="logo-img" src="logo-256.png" alt="The Supply Station" onerror="this.style.display='none'">
 <div>
 <div class="app-title">The Supply Station</div>
 <div class="app-sub">Faith Outreach Church</div>
@@ -182,7 +196,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="page active" id="page-shop">
 <div id="access-gate">
 <div class="access-screen">
-<img class="access-logo" src="https://raw.githubusercontent.com/focap01/giving-closet/main/logo.png" alt="The Supply Station" onerror="this.style.display='none'">
+<img class="access-logo" src="logo-256.png" alt="The Supply Station" onerror="this.style.display='none'">
 <div class="access-title">The Supply Station</div>
 <div class="access-sub">Welcome! To shop our free inventory you will need an access code provided by Faith Outreach Church.<br><br>Don't have one? Submit a request below and our team will review it and reach out to you.</div>
 <div class="fg" style="max-width:300px;margin:0 auto 12px;">
@@ -353,7 +367,7 @@ Welcome to The Supply Station! Browse our available items below.<br>
 <div class="modal" style="max-width:380px;">
 <div class="modal-title">Access card ready</div>
 <div class="print-card" id="print-card">
-<img src="https://raw.githubusercontent.com/focap01/giving-closet/main/logo.png" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--navy);margin-bottom:12px;" onerror="this.style.display='none'">
+<img src="logo-256.png" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--navy);margin-bottom:12px;" onerror="this.style.display='none'">
 <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">The Supply Station</div>
 <div style="font-size:12px;color:var(--text-3);margin-bottom:16px;">Faith Outreach Church</div>
 <div style="font-size:12px;color:var(--text-2);margin-bottom:8px;font-style:italic;">"Visit The Supply Station and let us bless you today."</div>
@@ -422,8 +436,11 @@ Welcome to The Supply Station! Browse our available items below.<br>
 </div>
 
 <div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- crossorigin="anonymous" makes these proper CORS requests instead of opaque
+     ones, which is what lets the service worker store them for offline use.
+     Both CDNs send Access-Control-Allow-Origin: *. -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" crossorigin="anonymous"></script>
 <script>
 var SURL = "https://cvfgtijbbotpmkjggebv.supabase.co";
 var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2Zmd0aWpiYm90cG1ramdnZWJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDg1OTgsImV4cCI6MjA5MTAyNDU5OH0.0MUWJs5Bh9C021U1p1BAbrAROEpzU2lYxHoSmsEeNYc";
@@ -1089,6 +1106,20 @@ function toast(msg) {
 }
 
 init();
+</script>
+
+<script>
+/* Offline support for the home-screen app. Registered after load so a slow or
+   failed registration can never delay the page. Wrapped in a guard because
+   service workers need HTTPS — opening index.html straight off the disk would
+   otherwise throw here. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {
+      /* Offline mode just won't be available; the app still works online. */
+    });
+  });
+}
 </script>
 </body>
 </html>
