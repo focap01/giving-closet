@@ -243,6 +243,7 @@ Welcome to The Supply Station! Browse our available items below.<br>
 <div id="pw-err" style="color:var(--coral);font-size:12px;margin-top:8px;display:none;">Incorrect password.</div>
 </div>
 <div id="admin-panel" style="display:none;">
+<div class="sec-hdr"><span class="sec-title">Admin panel</span><button class="btn-sec" style="flex:0;padding:6px 12px;" onclick="logoutAdmin()">Log out</button></div>
 <div class="stats-row" id="admin-stats"></div>
 <div class="tab-row">
 <button class="admin-tab active" onclick="showAdminTab('requests')">Requests <span id="pending-badge" class="flag-badge" style="display:none;">0</span></button>
@@ -882,6 +883,20 @@ function unlockAdmin() {
   document.getElementById("token-error").style.display = "none";
   showPage("admin");
   renderAdmin();
+}
+
+function logoutAdmin() {
+  adminUnlocked = false;
+  document.getElementById("tab-admin").style.display = "none";
+  document.getElementById("admin-panel").style.display = "none";
+  document.getElementById("admin-lock").style.display = "block";
+  document.getElementById("pw-input").value = "";
+  document.getElementById("pw-err").style.display = "none";
+  document.getElementById("token-input").value = "";
+  document.getElementById("token-error").style.display = "none";
+  document.getElementById("access-gate").style.display = "block";
+  document.getElementById("shop-content").style.display = "none";
+  showPage("shop");
 }
 
 function renderAdmin() {
