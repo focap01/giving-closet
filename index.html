@@ -189,7 +189,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="nav-tabs" id="nav-tabs">
 <button class="tab-btn active" id="tab-shop" onclick="showPage('shop')">Shop</button>
 <button class="tab-btn" id="tab-cart" onclick="showPage('cart')">Cart<span class="cart-dot" id="cart-dot">0</span></button>
-<button class="tab-btn" id="tab-admin" onclick="showPage('admin')">Admin</button>
+<button class="tab-btn" id="tab-admin" style="display:none;" onclick="showPage('admin')">Admin</button>
 </div>
 </div>
 
@@ -448,7 +448,6 @@ var EJS_SERVICE = "service_2ep9jbh";
 var EJS_TEMPLATE = "template_tcdbeds";
 var EJS_TEMPLATE_REQUEST = "template_2hixsnr";
 var EJS_KEY = "32rnTvuKEeetIvjkR";
-var ADMIN_PW = "church2024";
 var CATS = ["All","Canned Goods","Dry Goods","Bread & Bakery","Cereal & Breakfast","Home Goods","Cleaning Supplies","Hygiene Products","Diapers & Wipes","Other Non-Perishables"];
 var APP_URL = "https://supplystation.fochurch.org/";
 
@@ -529,22 +528,29 @@ function startPolling() {
 }
 
 function validateToken() {
-  var code = document.getElementById("token-input").value.trim().toUpperCase();
-  if(!code) { toast("Please enter your access code"); return; }
-  dbCall("requests?token=eq."+code+"&token_used=eq.false&status=eq.approved", "GET", null, function(err, result) {
-    if(err || !result || !result.length) {
-      document.getElementById("token-error").style.display = "block";
+  var entered = document.getElementById("token-input").value.trim();
+  if(!entered) { toast("Please enter your access code"); return; }
+  var tokenCode = entered.toUpperCase();
+  dbCall("settings?id=eq.1&select=admin_password", "GET", null, function(settingsErr, result) {
+    if(!settingsErr && result && result.length && entered === result[0].admin_password) {
+      unlockAdmin();
       return;
     }
-    var req = result[0];
-    currentToken = code;
-    tokenBudget = req.token_amount;
-    cartTotal = 0;
-    document.getElementById("token-error").style.display = "none";
-    document.getElementById("access-gate").style.display = "none";
-    document.getElementById("shop-content").style.display = "block";
-    updateBudgetDisplay();
-    toast("Welcome! You have $"+tokenBudget+" to spend.");
+    dbCall("requests?token=eq."+encodeURIComponent(tokenCode)+"&token_used=eq.false&status=eq.approved", "GET", null, function(err, tokenResult) {
+      if(err || !tokenResult || !tokenResult.length) {
+        document.getElementById("token-error").style.display = "block";
+        return;
+      }
+      var req = tokenResult[0];
+      currentToken = tokenCode;
+      tokenBudget = req.token_amount;
+      cartTotal = 0;
+      document.getElementById("token-error").style.display = "none";
+      document.getElementById("access-gate").style.display = "none";
+      document.getElementById("shop-content").style.display = "block";
+      updateBudgetDisplay();
+      toast("Welcome! You have $"+tokenBudget+" to spend.");
+    });
   });
 }
 
@@ -860,12 +866,22 @@ function submitCheckout() {
 }
 
 function checkPw() {
-  if(document.getElementById("pw-input").value === ADMIN_PW) {
-    adminUnlocked = true;
-    document.getElementById("admin-lock").style.display = "none";
-    document.getElementById("admin-panel").style.display = "block";
-    renderAdmin();
-  } else { document.getElementById("pw-err").style.display = "block"; }
+  var password = document.getElementById("pw-input").value;
+  dbCall("settings?id=eq.1&select=admin_password", "GET", null, function(err, result) {
+    if(!err && result && result.length && password === result[0].admin_password) unlockAdmin();
+    else document.getElementById("pw-err").style.display = "block";
+  });
+}
+
+function unlockAdmin() {
+  adminUnlocked = true;
+  document.getElementById("tab-admin").style.display = "inline-block";
+  document.getElementById("admin-lock").style.display = "none";
+  document.getElementById("admin-panel").style.display = "block";
+  document.getElementById("access-gate").style.display = "none";
+  document.getElementById("token-error").style.display = "none";
+  showPage("admin");
+  renderAdmin();
 }
 
 function renderAdmin() {
