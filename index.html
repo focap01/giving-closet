@@ -458,6 +458,7 @@ var inventory=[], orders=[], requests=[], settings={location:"Faith Outreach Chu
 var cart={}, activeCat="All", addStockTargetId=null, adminUnlocked=false;
 var currentToken=null, tokenBudget=0, cartTotal=0;
 var tokenRequestId=null;
+var demoToken=null;
 
 function dbCall(path, method, body, callback) {
   var xhr = new XMLHttpRequest();
@@ -491,7 +492,10 @@ function init() {
     dbCall("orders?order=id", "GET", null, function(err2, ord) {
       orders = ord || [];
       dbCall("settings?id=eq.1", "GET", null, function(err3, sett) {
-        if(sett && sett.length) settings = {location:sett[0].location, days:sett[0].days, hours:sett[0].hours};
+        if(sett && sett.length) {
+          settings = {location:sett[0].location, days:sett[0].days, hours:sett[0].hours};
+          demoToken = sett[0].demo_token || null;
+        }
         document.getElementById("shop-loading").style.display = "none";
         document.getElementById("items-grid").style.display = "grid";
         populatePickupSelects();
@@ -841,7 +845,7 @@ function submitCheckout() {
     };
     dbCall("orders","POST",order,function(err) {
       if(err) { toast("Error saving order."); return; }
-      if(currentToken) {
+      if(currentToken && currentToken !== demoToken) {
         dbCall("requests?token=eq."+currentToken,"PATCH",{token_used:true},function(){});
       }
       emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
